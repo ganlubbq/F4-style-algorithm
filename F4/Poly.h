@@ -19,9 +19,12 @@ public:
 	vector<unsigned char> Coeff;
 
 	//function
-	virtual void set_LM();
-	virtual void set_LMdeg();
-	virtual void set_LMdeg_index();
+	void* operator new(size_t size);
+	void operator delete(void* pv);
+
+	inline virtual void set_LM();
+	inline virtual void set_LMdeg();
+	//inline virtual void set_LMdeg_index();
 };
 
 Poly<class Degree>::Poly(vector<unsigned char> &coeff)
@@ -29,6 +32,34 @@ Poly<class Degree>::Poly(vector<unsigned char> &coeff)
 	Coeff = coeff;
 	set_LM();
 	set_LMdeg();
-	set_LMdeg_index();
 }
 
+//アライメント　simdに必要なほか高速化にも寄与
+void* Poly<Degree>::operator new(size_t size) {
+	return _mm_malloc(size, 32);
+}
+
+//アライメント
+void Poly<Degree>::operator delete(void* pv) {
+	_mm_free(pv);
+}
+
+//LMとLMのindexを代入
+inline void Poly<Degree>::set_LM()
+{
+	for (int i = Coeff.size() - 1; i >= 0; i--)
+	{
+		if (Coeff[i] != 0)
+		{
+			LM = Coeff[i];
+			LMdeg_index = i;
+			break;
+		}
+	}
+}
+
+//set_LMの後じゃないと動かない
+inline void Poly<Degree>::set_LMdeg()
+{
+	LMdeg = Degree.index_to_deg(LMdeg_index);
+}
