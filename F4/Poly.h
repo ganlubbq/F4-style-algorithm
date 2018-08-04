@@ -3,7 +3,9 @@
 
 using namespace std;
 
-//基準となるクラス　これを継承することで機能を実現する予定
+/*基準となるクラス　これを継承することで機能を実現する予定
+Degreeは一般的なもののみ対応　過度な高速化は汎用性を失う
+*/
 template<class Degree>
 class Poly
 {
@@ -17,10 +19,6 @@ public:
 	vector<unsigned char> Coeff;
 
 	//function
-	virtual void operator+(Poly &poly);
-	virtual void operator*(Poly &monomial);
-	virtual void operator*(unsigned char &coeff);
-
 	virtual void set_LM();
 	virtual void set_LMdeg();
 	virtual void set_LMdeg_index();
@@ -34,7 +32,3 @@ Poly<class Degree>::Poly(vector<unsigned char> &coeff)
 	set_LMdeg_index();
 }
 
-void Poly<class Degree>::operator+(Poly &poly)
-{
-
-}
