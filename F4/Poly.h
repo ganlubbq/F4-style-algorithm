@@ -11,12 +11,14 @@ class Poly
 {
 public:
 	Poly(vector<unsigned char> &coeff);
+	Poly(vector<unsigned char> &coeff,Degree degree);
 
 	//variable
-	int LM;
-	vector<unsigned char> LMdeg;
-	int LMdeg_index;
-	vector<unsigned char> Coeff;
+	int _LM;
+	vector<unsigned char> _LMdeg;
+	int _LMdeg_index;
+	vector<unsigned char> _Coeff;
+	Degree _degree;
 
 	//function
 	void* operator new(size_t size);
@@ -29,7 +31,7 @@ public:
 
 Poly<class Degree>::Poly(vector<unsigned char> &coeff)
 {
-	Coeff = coeff;
+	_Coeff = coeff;
 	set_LM();
 	set_LMdeg();
 }
@@ -47,12 +49,12 @@ void Poly<Degree>::operator delete(void* pv) {
 //LM‚ÆLM‚Ìindex‚ð‘ã“ü
 inline void Poly<Degree>::set_LM()
 {
-	for (int i = Coeff.size() - 1; i >= 0; i--)
+	for (int i = _Coeff.size() - 1; i >= 0; i--)
 	{
-		if (Coeff[i] != 0)
+		if (_Coeff[i] != 0)
 		{
-			LM = Coeff[i];
-			LMdeg_index = i;
+			_LM = _Coeff[i];
+			_LMdeg_index = i;
 			break;
 		}
 	}
@@ -61,5 +63,5 @@ inline void Poly<Degree>::set_LM()
 //set_LM‚ÌŒã‚¶‚á‚È‚¢‚Æ“®‚©‚È‚¢
 inline void Poly<Degree>::set_LMdeg()
 {
-	LMdeg = Degree.index_to_deg(LMdeg_index);
+	_LMdeg = _degree.index_to_deg(_LMdeg_index);
 }
