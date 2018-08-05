@@ -9,10 +9,10 @@
 #include <x86intrin.h>
 #endif
 
-class Poly_GF31_simd : public Poly<Degree>
-{
-	using Poly::Poly;
+class Poly_GF31_simd : public Poly
+{	using Poly::Poly;
 public:
+	//operator
 	virtual void operator+(Poly &poly);
 	virtual void operator*(Poly &monomial);
 	virtual void operator*(unsigned char &coeff);
