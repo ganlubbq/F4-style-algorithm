@@ -9,7 +9,10 @@ Degree_table Poly::_Degree = d;
 #endif //D1
 
 int Poly::_Max_degree = 7;
-int F4::_Variables = variables;
+
+#ifdef _GF31
+int F4<GF31>::_Variables = variables;
+#endif //_GF31
 
 void printvec(vector<unsigned char> vec)
 {
