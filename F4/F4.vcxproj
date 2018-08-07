@@ -116,7 +116,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Degree_table.cpp" />
-    <ClCompile Include="F4.cpp" />
     <ClCompile Include="GF31.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Poly.cpp" />

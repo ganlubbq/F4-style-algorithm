@@ -77,6 +77,7 @@ public:
 	//variable
 	int _Coeff_size;//coeff‚Ìsize
 	int _Div_single_size;//coeff_size ‚ğsingle_size‚ÅŠ„‚Á‚½’l@simd‚Ü‚í‚·”
+	const string _DX = "d";//%d or %x
 
 	//function
 	void MOD31(TYPE_AVX& vec);
