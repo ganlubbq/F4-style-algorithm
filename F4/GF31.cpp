@@ -1,184 +1,185 @@
-#include "Poly_GF31_simd.h"
+#include "GF31.h"
 
-inline void Poly_GF31_simd::MOD31(TYPE_AVX& vec) {
+/*
+inline void GF31::MOD31(TYPE_AVX& vec) {
 	vec = ADD_AVX(vec, AVX_CONST_0x01);
 	vec = SUB_AVX(AND_AVX(vec, AVX_CONST_0x1f), RIGHT_AVX(XOR_AVX(AND_AVX(vec, AVX_CONST_0x20), AVX_CONST_0x20), 0x5));
 }
 
-inline void Poly_GF31_simd::MOD31_First(TYPE_AVX& vec) {
+inline void GF31::MOD31_First(TYPE_AVX& vec) {
 	vec = ADD_AVX(AND_AVX(vec, AVX_CONST_0x1f), RIGHT_AVX(AND_AVX(vec, AVX_CONST_0x20), 5));
 }
 
-inline void Poly_GF31_simd::mul0() {
+inline void GF31::mul0() {
 	cout << "mul0 occur error" << endl;
 	system("pause");
 	return;
 }
 
-inline void Poly_GF31_simd::mul1() {
+inline void GF31::mul1() {
 	return;
 }
 
 // vec *= 2*vec2の計算
-inline void Poly_GF31_simd::mul2() {
+inline void GF31::mul2() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		//vec += ((vec2 & 0x10) >> 4) + ((vec2 & 0x0f) << 1);
 		vx[i] = ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 0x4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1));
 		MOD31(vx[i]);
 	}
 
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (2 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul3() {
+inline void GF31::mul3() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		//vec += 2*vec2 + vec2;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 0x4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)), vx[i]);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (3 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul4() {
+inline void GF31::mul4() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += ((vec2 & 0x18) >> 3) + ((vec2 & 0x7) << 2);
 		vx[i] = ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 0x3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 0x2));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (4 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul5() {
+inline void GF31::mul5() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += 4*vec2 + vec2;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 0x3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 0x2)), vx[i]);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (5 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul6() {
+inline void GF31::mul6() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += 4*vec + 2*vec;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 2)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (6 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul7() {
+inline void GF31::mul7() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += 8*vec + vec^0x1f;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)), XOR_AVX(vx[i], AVX_CONST_0x1f));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (7 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul8() {
+inline void GF31::mul8() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += (vec2 & 0x1c) >> 2 + (vec2 & 0x3) << 3;
 		vx[i] = ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (8 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul9() {
+inline void GF31::mul9() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += 8*vec2 + vec2;
 		vx[i] = ADD_AVX(vx[i], ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (9 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul10() {
+inline void GF31::mul10() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += 8*vec2 + 2*vec2;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (10 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul11() {
+inline void GF31::mul11() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (int i = 0; i < _Div_single_size ; ++i) {
+	for (int i = 0; i < _Div_single_size; ++i) {
 		// vec += (4 * vec2 + 16 * vec2) ^ 0x1f;
 		temp = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 2)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4)));
 		MOD31_First(temp);
@@ -187,34 +188,34 @@ inline void Poly_GF31_simd::mul11() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (11 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul12() {
+inline void GF31::mul12() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		//vec += (vec2 * 4 + vec2 * 8);
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 2)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (12 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul13() {
+inline void GF31::mul13() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += (vec2 * 2 + vec2 * 16) ^ 0x1f;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4)));
 		MOD31_First(vx[i]);
@@ -223,18 +224,18 @@ inline void Poly_GF31_simd::mul13() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (13 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul14() {
+inline void GF31::mul14() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += (vec2 * 17) ^ 0x1f;
 		temp = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4)), vx[i]);
 		MOD31_First(temp);
@@ -243,51 +244,51 @@ inline void Poly_GF31_simd::mul14() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (14 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul15() {
+inline void GF31::mul15() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += (vec2 * 16) ^ 0x1f;
 		vx[i] = XOR_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4)), AVX_CONST_0x1f);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (15 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul16() {
+inline void GF31::mul16() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += ((vec2 & 0x1e) >> 1) + ((vec2 & 0x1) << 4);
 		vx[i] = ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (16 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul17() {
+inline void GF31::mul17() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += 16 * vec2 + vec2;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4)), vx[i]);
 		//MOD31_First(temp);
@@ -296,35 +297,35 @@ inline void Poly_GF31_simd::mul17() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (17 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul18() {
+inline void GF31::mul18() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec += 16 * vec + 2 * vec;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4)));
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (18 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul19() {
+inline void GF31::mul19() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (8 * vec + 4 * vec) ^ 0x1f;
 		temp = LOAD_AVX(_Coeff[i]);
 		//cout << "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$" << _Div_single_size l;
@@ -335,35 +336,35 @@ inline void Poly_GF31_simd::mul19() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (19 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul20() {
+inline void GF31::mul20() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = 16 * vec + 4 * vec;
 		vx[i] = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 2)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1e), 1), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x01), 4)));;
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (20 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul21() {
+inline void GF31::mul21() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (8 * vec + 2 * vec) ^ 0x1f;
 		temp = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)));
 		MOD31_First(temp);
@@ -372,18 +373,18 @@ inline void Poly_GF31_simd::mul21() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (21 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul22() {
+inline void GF31::mul22() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (9 * vec) ^ 0x1f;
 		temp = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)), vx[i]);
 		MOD31_First(temp);
@@ -392,34 +393,34 @@ inline void Poly_GF31_simd::mul22() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (22 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul23() {
+inline void GF31::mul23() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (8 * vec) ^ 0x1f;
 		vx[i] = XOR_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)), AVX_CONST_0x1f);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (23 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul24() {
+inline void GF31::mul24() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (8 * vec) ^ 0x1f + vec;
 		// vec = 23 * vec + vec ;
 		vx[i] = ADD_AVX(XOR_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x1c), 2), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x03), 3)), AVX_CONST_0x1f), vx[i]);
@@ -427,18 +428,18 @@ inline void Poly_GF31_simd::mul24() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (24 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul25() {
+inline void GF31::mul25() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (2 * vec + 4 * vec) ^ 0x1f;
 		temp = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)), ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 2)));
 		MOD31_First(temp);
@@ -447,18 +448,18 @@ inline void Poly_GF31_simd::mul25() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (25 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul26() {
+inline void GF31::mul26() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (5 * vec) ^ 0x1f;
 		temp = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 2)), vx[i]);
 		MOD31_First(temp);
@@ -467,35 +468,35 @@ inline void Poly_GF31_simd::mul26() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (26 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul27() {
+inline void GF31::mul27() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (4 * vec) ^ 0x1f;
 		vx[i] = XOR_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x18), 3), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x07), 2)), AVX_CONST_0x1f);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (27 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul28() {
+inline void GF31::mul28() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
 	TYPE_AVX temp;
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (3 * vec) ^ 0x1f;
 		temp = ADD_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)), vx[i]);
 		MOD31_First(temp);
@@ -504,46 +505,46 @@ inline void Poly_GF31_simd::mul28() {
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (28 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul29() {
+inline void GF31::mul29() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = (2 * vec) ^ 0x1f;
 		vx[i] = XOR_AVX(ADD_AVX(RIGHT_AVX(AND_AVX(vx[i], AVX_CONST_0x10), 4), LEFT_AVX(AND_AVX(vx[i], AVX_CONST_0x0f), 1)), AVX_CONST_0x1f);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (29 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::mul30() {
+inline void GF31::mul30() {
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size ; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		// vec = vec ^ 0x1f;
 		vx[i] = XOR_AVX(vx[i], AVX_CONST_0x1f);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size  * single_size; i <_Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (30 * _Coeff[i]) % 31;
 	}
 }
 
-inline void Poly_GF31_simd::operator+(Poly &poly)
+inline void GF31::operator+(GF31 poly)
 {
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
@@ -562,7 +563,7 @@ inline void Poly_GF31_simd::operator+(Poly &poly)
 }
 
 //coeff倍
-inline void Poly_GF31_simd::operator*(unsigned char &n)
+inline void GF31::operator*(unsigned char &n)
 {
 	switch (n)
 	{
@@ -663,12 +664,12 @@ inline void Poly_GF31_simd::operator*(unsigned char &n)
 }
 
 //monomialの係数は1が前提　Coeffのスライドをする LMDeg,LMdeg_index,Coeff_size,div_single_size,Max_degreeを更新
-inline void Poly_GF31_simd::operator*(vector<unsigned char> &monomial_deg)
+inline void GF31::operator*(vector<unsigned char> &monomial_deg)
 {
 	//もろもろ更新
-	_LMdeg = _Degree.vec_add(_LMdeg,monomial_deg);
+	_LMdeg = _Degree.vec_add(_LMdeg, monomial_deg);
 	_LMdeg_index = _Degree.degree_to_index(_LMdeg);
-	
+
 	//_Coeffのresizeと_Coeff_sizeとdiv_single_size更新
 	while (_Coeff_size < _LMdeg_index + 1)
 	{
@@ -693,3 +694,4 @@ inline void Poly_GF31_simd::operator*(vector<unsigned char> &monomial_deg)
 	}
 	_Coeff = coeff_temp;
 }
+*/

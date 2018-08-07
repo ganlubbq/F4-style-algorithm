@@ -1,13 +1,12 @@
 #pragma once
 #include <vector>
+//degree切り替え
 #define D1
 #ifdef D1
 #include "Degree_table.h"
 #endif //D1
 
 using namespace std;
-
-static const int variables = 10;
 
 /*基準となるクラス　これを継承することで機能を実現する予定
 Degreeは一般的なもののみ対応　過度な高速化は汎用性を失う
@@ -30,12 +29,13 @@ public:
 #endif //D1
 //
 
-	//function
+	//operator
 	void* operator new(size_t size);
 	void operator delete(void* pv);
 
+	//function
 	virtual void set_LM();
 	virtual void set_LMdeg();
-	//inline virtual void set_LMdeg_index();
+	virtual vector<unsigned char> LCM(vector<unsigned char> &f, vector<unsigned char> &g);
 };
 

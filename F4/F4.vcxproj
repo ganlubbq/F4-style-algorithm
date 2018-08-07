@@ -117,15 +117,15 @@
   <ItemGroup>
     <ClCompile Include="Degree_table.cpp" />
     <ClCompile Include="F4.cpp" />
+    <ClCompile Include="GF31.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Poly.cpp" />
-    <ClCompile Include="Poly_GF31_simd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Degree_table.h" />
     <ClInclude Include="F4.h" />
+    <ClInclude Include="GF31.h" />
     <ClInclude Include="Poly.h" />
-    <ClInclude Include="Poly_GF31_simd.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,16 +1,41 @@
-#include "Poly_GF31_simd.h"
+#include <iostream>
+#include "F4.h"
 
+static const int variables = 10;
 //PolyŠÖ˜A‰Šú‰»
 #ifdef D1
 Degree_table d(variables);
 Degree_table Poly::_Degree = d;
 #endif //D1
+
 int Poly::_Max_degree = 7;
+int F4::_Variables = variables;
+
+void printvec(vector<unsigned char> vec)
+{
+	cout << "[ ";
+	for (int i = 0; i < vec.size(); i++)
+	{
+		cout << (int)vec[i] << " ";
+	}
+	cout << "]" << endl;
+}
 
 int main()
 {
-	vector<unsigned char> a(2);
-	Poly_GF31_simd p(a);
+	vector<unsigned char> a = {2,7,4,5,6,2,8,9,5,14,17,25,28,30,5,3,7,9,12,4};
+	vector<unsigned char> b = {2,7,4,5,6,2,8,9,5,14,17,25,28,30,5,3,7,9,12,4};
+	GF31 f(a),g(b);
 
+	printvec(f._Coeff);
+	printvec(g._Coeff);
+
+	f + g;
+	printvec(f._Coeff);
+	unsigned char e = 5;
+	g * e;
+	printvec(g._Coeff);
+
+	system("pause");
 	return 0;
 }

@@ -17,7 +17,7 @@ void Poly::operator delete(void* pv) {
 	_mm_free(pv);
 }
 
-//LM‚ÆLM‚Ìindex‚ð‘ã“ü
+//LM‚ÆLM‚Ìindex‚ð‘ã“ü init
 inline void Poly::set_LM()
 {
 	for (int i = _Coeff.size() - 1; i >= 0; i--)
@@ -31,8 +31,21 @@ inline void Poly::set_LM()
 	}
 }
 
-//set_LM‚ÌŒã‚¶‚á‚È‚¢‚Æ“®‚©‚È‚¢
+//set_LM‚ÌŒã‚¶‚á‚È‚¢‚Æ“®‚©‚È‚¢ init
 inline void Poly::set_LMdeg()
 {
 	_LMdeg = _Degree.index_to_degree(_LMdeg_index);
+}
+
+//f.size() = g.size()‚Í‘O’ñ
+inline vector<unsigned char> Poly::LCM(vector<unsigned char> &f, vector<unsigned char> &g)
+{
+	vector<unsigned char> temp(f.size());
+
+	for (int i = 0; i < f.size(); i++)
+	{
+		if (f[i] < g[i]) temp[i] = g[i];
+		else temp[i] = g[i];
+	}
+	return temp;
 }
