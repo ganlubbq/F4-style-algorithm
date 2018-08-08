@@ -1,5 +1,5 @@
 #include "Degree_table.h"
-
+//
 //degree‚Ìdefalt‚Í‚V
 Degree_table::Degree_table(int variables,int degree)
 {
