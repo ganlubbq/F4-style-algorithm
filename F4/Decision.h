@@ -6,11 +6,13 @@ class Decision
 public:
 	//variables
 	vector<vector<int>> _D;
+	vector<vector<vector<int>>> _D_sort;//total degree順
 
 	//function
 	vector<int> decision(vector<GF> &G);
 	void Gebauer_Moller(vector<GF> &G);
 	void Buchberger(vector<GF> &G);
+	void sort_D(vector<GF> &G);
 
 	virtual bool veceq(vector<unsigned char> &f, vector<unsigned char> &g);
 
@@ -21,6 +23,7 @@ vector<int> Decision<GF>::decision(vector<GF> &G)
 {
 	Gebauer_Moller(G);
 	Buchberger(G);
+	sort_D(G);
 }
 
 template<class GF>
@@ -102,6 +105,26 @@ void Decision<GF>::Buchberger(vector<GF> &G)
 	_D.resize(temp.size());
 	_D = temp;
 }
+
+//Spolyは左と右分けることが前提　sortする Max_degreeの更新も
+template<class GF>
+void Decision<GF>::sort_D(vector<GF> &G)
+{
+	_D_sort.resize(GF._Max_degree);
+
+	for (int i = 0; i < _D.size(); i++)
+	{
+		int lcm_deg = GF._Degree.calc_total_deg(GF._Degree.LCM(G[_D[i][0]].LMdeg, G[_D[i][1]].LMdeg));
+		if (GF._Max_degree < lcm_deg)
+		{
+			GF._Max_degree = lcm_deg;
+			GF._Degree.update_degree(_Max_degree);
+			_D_sort.resize(GF._Max_degree);
+		}
+		_D_sort[GF._Max_degree].push_back(_D[i]);
+	}
+}
+
 
 //veq イコール判定機
 template<class GF>

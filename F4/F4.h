@@ -25,6 +25,7 @@ public:
 	string file_name;
 	static int _Variables;
 
+	vector<GF> _Spolies;
 	vector<GF> _Equations;
 
 	//function
