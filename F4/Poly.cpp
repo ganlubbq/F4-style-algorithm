@@ -36,16 +36,3 @@ inline void Poly::set_LMdeg()
 {
 	_LMdeg = _Degree.index_to_degree(_LMdeg_index);
 }
-
-//f.size() = g.size()‚Í‘O’ñ
-inline vector<unsigned char> Poly::LCM(vector<unsigned char> &f, vector<unsigned char> &g)
-{
-	vector<unsigned char> temp(f.size());
-
-	for (int i = 0; i < f.size(); i++)
-	{
-		if (f[i] < g[i]) temp[i] = g[i];
-		else temp[i] = g[i];
-	}
-	return temp;
-}

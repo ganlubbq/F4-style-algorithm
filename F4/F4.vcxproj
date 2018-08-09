@@ -121,6 +121,7 @@
     <ClCompile Include="Poly.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Decision.h" />
     <ClInclude Include="Degree_table.h" />
     <ClInclude Include="F4.h" />
     <ClInclude Include="GF31.h" />

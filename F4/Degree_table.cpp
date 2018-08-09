@@ -110,6 +110,39 @@ int Degree_table::calc_total_deg(vector<unsigned char> degree)
 	return temp;
 }
 
+//f.size() = g.size()は前提 f,gはdegree
+inline vector<unsigned char> Degree_table::LCM(vector<unsigned char> &f, vector<unsigned char> &g)
+{
+	vector<unsigned char> temp(f.size());
+
+	for (int i = 0; i < f.size(); i++)
+	{
+		if (f[i] < g[i]) temp[i] = g[i];
+		else temp[i] = g[i];
+	}
+	return temp;
+}
+
+//f | g  f.size() = g.size()は前提 f,gはdegree
+inline bool Degree_table::reducible(vector<unsigned char> &f, vector<unsigned char> &g)
+{
+	for (int i = 0; i < f.size(); i++)
+	{
+		if (f[i] > g[i]) return false;
+	}
+	return true;
+}
+
+//gcd=1かどうか  f.size() = g.size()は前提 f,gはdegree
+inline bool Degree_table::gcd_1(vector<unsigned char> &f, vector<unsigned char> &g)
+{
+	for (int i = 0; i < f.size(); i++)
+	{
+		if (f[i] > 0 && g[i] > 0) return false;
+	}
+	return true;
+}
+
 //通常のadd,_Degree_tableに使う
 vector<unsigned char> Degree_table::vec_add(vector<unsigned char> a, vector<unsigned char> &b)
 {

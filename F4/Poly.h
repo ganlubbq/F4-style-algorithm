@@ -36,6 +36,5 @@ public:
 	//function
 	virtual void set_LM();
 	virtual void set_LMdeg();
-	virtual vector<unsigned char> LCM(vector<unsigned char> &f, vector<unsigned char> &g);
 };
 

@@ -3,14 +3,18 @@
 #include <sstream>
 #include <string>
 
+//多項式include
 #define _GF31
 #ifdef _GF31
 #include "GF31.h"
 #endif //GF31
 
+//判定include
+#include "Decision.h"
+
 using namespace std;
 
-//F4アルゴリズム　ファイル読み込みは標準実装　基本的にはSpoly class等をインクルードするつもり　大きな書き換えは継承すべし
+//F4アルゴリズム　ファイル読み込みは標準実装　大きな書き換えは継承すべし
 template <class GF>
 class F4
 {

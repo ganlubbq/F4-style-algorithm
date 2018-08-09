@@ -28,6 +28,10 @@ public:
 	int degree_to_index(vector<unsigned char> degree);
 	int calc_total_deg(vector<unsigned char> degree);
 
+	virtual vector<unsigned char> LCM(vector<unsigned char> &f, vector<unsigned char> &g);
+	virtual bool reducible(vector<unsigned char> &f, vector<unsigned char> &g);
+	virtual bool gcd_1(vector<unsigned char> &f, vector<unsigned char> &g);
+
 	vector<unsigned char> vec_add(vector<unsigned char> a, vector<unsigned char> &b);
 	vector<unsigned char> vec_sub(vector<unsigned char> a, vector<unsigned char> &b);
 
