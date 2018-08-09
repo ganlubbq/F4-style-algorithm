@@ -101,11 +101,4 @@ inline void F4<GF, Deci>::F4_style()
 	//init
 	_Decision.decision(_Equations);
 
-	for (int i = 0; i < _Decision._D_sort.size(); i++)
-	{
-		for (auto itr = _Decision._D_sort[i].begin(); itr != _Decision._D_sort[i].end(); itr++)
-		{
-			printvec(*itr);
-		}
-	}
 }
