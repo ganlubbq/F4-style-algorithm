@@ -15,6 +15,7 @@ class Poly
 {
 public:
 	Poly(vector<unsigned char> &coeff);
+	Poly();
 
 	//variable
 	int _LM;

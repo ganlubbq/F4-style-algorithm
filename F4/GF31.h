@@ -74,6 +74,9 @@ public:
 		_Div_single_size = _Coeff_size / single_size;
 	};
 
+	GF31() : Poly()
+	{};
+
 	//variable
 	int _Coeff_size;//coeff‚Ìsize
 	int _Div_single_size;//coeff_size ‚ğsingle_size‚ÅŠ„‚Á‚½’l@simd‚Ü‚í‚·”

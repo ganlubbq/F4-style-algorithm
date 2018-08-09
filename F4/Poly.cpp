@@ -7,6 +7,9 @@ Poly::Poly(vector<unsigned char> &coeff)
 	set_LMdeg();
 }
 
+Poly::Poly()
+{}
+
 //アライメント　simdに必要なほか高速化にも寄与
 void* Poly::operator new(size_t size) {
 	return _mm_malloc(size, 32);

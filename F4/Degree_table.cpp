@@ -124,7 +124,7 @@ inline vector<unsigned char> Degree_table::LCM(vector<unsigned char> &f, vector<
 }
 
 //f | g  f.size() = g.size()‚Í‘O’ñ f,g‚Ídegree
-inline bool Degree_table::reducible(vector<unsigned char> &f, vector<unsigned char> &g)
+inline bool Degree_table::reducible(vector<unsigned char> f, vector<unsigned char> g)
 {
 	for (int i = 0; i < f.size(); i++)
 	{

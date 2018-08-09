@@ -1,7 +1,24 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include "F4.h"
 
-static const int variables = 10;
+//ëΩçÄéÆinclude
+#define _GF31_
+#ifdef _GF31_
+#include "GF31.h"
+#endif //_GF31_
+
+//îªíËinclude
+#define _decision_
+#ifdef _decision_
+#include "Decision.h"
+#endif //_decision_
+
+//Spoly include
+#include "Spoly.h"
+
+static const int variables = 2;
+string filename = "GF31_2-0.txt";
 //Polyä÷òAèâä˙âª
 #ifdef D1
 Degree_table d(variables);
@@ -10,9 +27,11 @@ Degree_table Poly::_Degree = d;
 
 int Poly::_Max_degree = 7;
 
-#ifdef _GF31
-int F4<GF31>::_Variables = variables;
-#endif //_GF31
+#ifdef _GF31_ 
+Decision<GF31> dd;
+int F4<GF31,Decision<GF31>>::_Variables = variables;
+Decision<GF31> F4<GF31,Decision<GF31>>::_Decision = dd;
+#endif //_GF31_
 
 void printvec(vector<unsigned char> vec)
 {
@@ -26,7 +45,7 @@ void printvec(vector<unsigned char> vec)
 
 int main()
 {
-	vector<unsigned char> a = {2,7,4,5,6,2,8,9,5,14,17,25,28,30,5,3,7,9,12,4};
+	/*vector<unsigned char> a = {2,7,4,5,6,2,8,9,5,14,17,25,28,30,5,3,7,9,12,4};
 	vector<unsigned char> b = {2,7,4,5,6,2,8,9,5,14,17,25,28,30,5,3,7,9,12,4};
 	GF31 f(a),g(b);
 
@@ -37,7 +56,10 @@ int main()
 	printvec(f._Coeff);
 	unsigned char e = 5;
 	g * e;
-	printvec(g._Coeff);
+	printvec(g._Coeff);*/
+
+	F4<GF31,Decision<GF31>> f4(filename);
+	f4.F4_style();
 
 	system("pause");
 	return 0;

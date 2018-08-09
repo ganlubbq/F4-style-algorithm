@@ -29,7 +29,8 @@ public:
 	int calc_total_deg(vector<unsigned char> degree);
 
 	virtual vector<unsigned char> LCM(vector<unsigned char> &f, vector<unsigned char> &g);
-	virtual bool reducible(vector<unsigned char> &f, vector<unsigned char> &g);
+	//&使うとバグる　正確には計算結果をそのまま引数にとれない
+	virtual bool reducible(vector<unsigned char> f, vector<unsigned char> g);
 	virtual bool gcd_1(vector<unsigned char> &f, vector<unsigned char> &g);
 
 	vector<unsigned char> vec_add(vector<unsigned char> a, vector<unsigned char> &b);
