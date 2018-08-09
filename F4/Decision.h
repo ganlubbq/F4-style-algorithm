@@ -101,7 +101,7 @@ void Decision<GF>::Buchberger(vector<GF> &G)
 	vector<vector<int>> temp;
 	for (int i = 0;i < _D.size();i++)
 	{
-		if (_GFd._Degree.gcd_1(G[_D[i][0]]._LMdeg,G[_D[i][1]]._LMdeg))
+		if (!(_GFd._Degree.gcd_1(G[_D[i][0]]._LMdeg,G[_D[i][1]]._LMdeg)))
 		{
 			temp.push_back(_D[i]);
 		}
