@@ -12,6 +12,10 @@
 //判定include
 #include "Decision.h"
 
+//Spoly include
+#include "Spoly.h"
+
+
 using namespace std;
 
 //F4アルゴリズム　ファイル読み込みは標準実装　大きな書き換えは継承すべし

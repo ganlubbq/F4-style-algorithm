@@ -78,6 +78,7 @@ public:
 	int _Coeff_size;//coeff‚Ìsize
 	int _Div_single_size;//coeff_size ‚ğsingle_size‚ÅŠ„‚Á‚½’l@simd‚Ü‚í‚·”
 	const string _DX = "d";//%d or %x
+	const vector<int> _Inverse = {0,1,16,21,8,25,26,9,4,7,28,17,13,12,20,29,2,11,19,18,14,3,24,27,22,5,6,23,10,15,30};
 
 	//function
 	void MOD31(TYPE_AVX& vec);
