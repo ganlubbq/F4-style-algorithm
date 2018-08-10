@@ -126,6 +126,7 @@
     <ClInclude Include="Degree_table.h" />
     <ClInclude Include="F4.h" />
     <ClInclude Include="GF31.h" />
+    <ClInclude Include="LB.h" />
     <ClInclude Include="Poly.h" />
     <ClInclude Include="Red.h" />
     <ClInclude Include="Spoly.h" />

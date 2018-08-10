@@ -6,6 +6,9 @@
 #define _GF31_
 #ifdef _GF31_
 #include "GF31.h"
+vector<unsigned char> GF31::_Inverse = { 0,1,16,21,8,25,26,9,4,7,28,17,13,12,20,29,2,11,19,18,14,3,24,27,22,5,6,23,10,15,30 };
+vector<unsigned char> GF31::_Add_inverse = { 0,30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1 };
+string GF31::_DX = "d";
 #endif //_GF31_
 
 //”»’èinclude

@@ -23,19 +23,34 @@ void Poly::operator delete(void* pv) {
 //LM‚ÆLM‚Ìindex‚ð‘ã“ü init
 inline void Poly::set_LM()
 {
+	bool flag = true;
 	for (int i = _Coeff.size() - 1; i >= 0; i--)
 	{
 		if (_Coeff[i] != 0)
 		{
+			flag = false;
 			_LM = _Coeff[i];
 			_LMdeg_index = i;
 			break;
 		}
+	}
+
+	if (flag)
+	{
+		_LM = 0;
+		_LMdeg_index = -1;
 	}
 }
 
 //set_LM‚ÌŒã‚¶‚á‚È‚¢‚Æ“®‚©‚È‚¢ init
 inline void Poly::set_LMdeg()
 {
-	_LMdeg = _Degree.index_to_degree(_LMdeg_index);
+	if (_LMdeg_index == -1)
+	{
+		_LMdeg.resize(0);
+	}
+	else
+	{
+		_LMdeg = _Degree.index_to_degree(_LMdeg_index);
+	}
 }

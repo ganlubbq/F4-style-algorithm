@@ -80,8 +80,9 @@ public:
 	//variable
 	int _Coeff_size;//coeffÇÃsize
 	int _Div_single_size;//coeff_size Çsingle_sizeÇ≈äÑÇ¡ÇΩílÅ@simdÇ‹ÇÌÇ∑êî
-	const string _DX = "d";//%d or %x
-	const vector<int> _Inverse = {0,1,16,21,8,25,26,9,4,7,28,17,13,12,20,29,2,11,19,18,14,3,24,27,22,5,6,23,10,15,30};
+	static string _DX;//%d or %x
+	static vector<unsigned char> _Inverse;
+	static vector<unsigned char> _Add_inverse;
 
 	//function
 	void MOD31(TYPE_AVX& vec);
@@ -691,6 +692,8 @@ inline void GF31::operator+(GF31 poly)
 	for (size_t i = _Div_single_size * single_size; i < _Coeff_size; ++i) {
 		_Coeff[i] = (_Coeff[i] + poly._Coeff[i]) % 31;
 	}
+	set_LM();
+	set_LMdeg();
 }
 
 //coeffî{

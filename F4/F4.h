@@ -8,7 +8,7 @@
 using namespace std;
 
 //F4アルゴリズム　ファイル読み込みは標準実装　大きな書き換えは継承すべし
-template <class GF, class Deci,class Spol>
+template <class GF, class Deci,class Spol,class Red,class LB>
 class F4
 {
 public:

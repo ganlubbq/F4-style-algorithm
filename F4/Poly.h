@@ -18,7 +18,7 @@ public:
 	Poly();
 
 	//variable
-	int _LM;
+	int _LM;//‚±‚êLC‚¾‚Á‚½‚í
 	vector<unsigned char> _LMdeg;
 	int _LMdeg_index;
 	vector<unsigned char> _Coeff;
