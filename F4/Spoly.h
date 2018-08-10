@@ -12,26 +12,32 @@ public:
 	GF _GFs;
 
 	//function
-	void calc_Spoly(vector<GF> &G, vector<int> &D);
+	void calc_Spoly(vector<GF> &G, vector<vector<int>> &D);
 	void spoly_erase();
 
 };
 
 //SpolyåvéZÅ@
 template<class GF>
-inline void Spoly<GF>::calc_Spoly(vector<GF> &G, vector<int> &D)
+inline void Spoly<GF>::calc_Spoly(vector<GF> &G, vector<vector<int>> &D)
 {
 	_Spolies.resize(D.size() * 2);
 
 #pragma omp parallel for
 	for (int i = 0; i < D.size(); i++)
 	{
-		vector<unsigned char> lcm_deg = _GFs._Degree.LCM(G[D[0]]._LMdeg, G[D[1]]._LMdeg);
+		vector<unsigned char> lcm_deg = _GFs._Degree.LCM(G[D[i][0]]._LMdeg, G[D[i][1]]._LMdeg);
+		vector<unsigned char> temp = _GFs._Degree.vec_sub(lcm_deg, G[D[i][0]]._LMdeg);
 
-		GF temp_left(G[D[0]] * _GFs._Inverse(G[D[0]]._LM) * _GFs._Degree.vec_sub(lcm_deg, G[D[0]]._LMdeg));
-		GF temp_right(G[D[1]] * _GFs._Inverse(G[D[1]]._LM) * _GFs._Degree.vec_sub(lcm_deg, G[D[1]]._LMdeg));
-		_Spolies[2 * i] = temp_left;
-		_Spolies[2 * i + 1] = temp_right;
+		G[D[i][0]] * _GFs._Inverse[G[D[i][0]]._LM];
+		G[D[i][0]] * temp;
+
+		temp = _GFs._Degree.vec_sub(lcm_deg, G[D[i][1]]._LMdeg);
+		G[D[i][1]] * _GFs._Inverse[G[D[i][1]]._LM];
+		G[D[i][1]] * temp;
+
+		_Spolies[2 * i] = G[D[i][0]];
+		_Spolies[2 * i + 1] = G[D[i][1]];
 	}
 }
 

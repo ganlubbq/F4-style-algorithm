@@ -24,9 +24,9 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 	vector<int> M_index;
 	for (int i = 0; i < Spolies.size(); i++)
 	{
-		for (int j = 0; j < Spolies[i].size(); j++)
+		for (int j = 0; j < Spolies[i]._Coeff.size(); j++)
 		{
-			if (Spolies[i][j] != 0)
+			if (Spolies[i]._Coeff[j] != 0)
 			{
 				bool flag_wao = true;
 				for (int k = 0; k < M_index.size(); k++)
@@ -60,17 +60,17 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 		{
 			for (int j = 0; j < G.size(); j++)
 			{
-				if (_Gfr._Degree.reducible(G[j]._LMdeg, _Gfr._Degree.index_to_degree(M_index[i])))
+				if (_GFr._Degree.reducible(G[j]._LMdeg, _GFr._Degree.index_to_degree(M_index[i])))
 				{
 					flag = true;
-					vector<unsigned char> temp_deg = _Gfr._degree.vec_sub(_Gfr._Degree.index_to_degree(M_index[i]),G[j]._LMdeg);
+					vector<unsigned char> temp_deg = _GFr._Degree.vec_sub(_GFr._Degree.index_to_degree(M_index[i]),G[j]._LMdeg);
 					GF temp_g = G[j];
 					temp_g * temp_deg;
 					_Reds.push_back(temp_g);
 					temp_g = G[j];
 					temp_g.LM_del();
 					temp_g * temp_deg;
-					for (int k = 0; k < temp_g.size(); k++)
+					for (int k = 0; k < temp_g._Coeff.size(); k++)
 					{
 						if (temp_g._Coeff[k] != 0)
 						{

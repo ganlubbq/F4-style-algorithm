@@ -20,9 +20,7 @@ public:
 template <class GF>
 void LB<GF>::calc_LB(vector<GF> &Sp_red)
 {
-	Gauss_rev(vector<GF> &Sp_red);
-	del_0poly(vector<GF> &Sp_red);
-	
+	Gauss_rev(Sp_red);
 }
 
 template <class GF>
@@ -31,11 +29,11 @@ void LB<GF>::Gauss_rev(vector<GF> &Sp_red)
 	for (int i = 0; i < Sp_red.size(); i++)
 	{
 		//0‘½€Ž®
-		if (Sp_red[i]._LMdeg == -1) continue;
+		if (Sp_red[i]._LMdeg_index == -1) continue;
 		//LC = 1‚É
 		if (Sp_red[i]._LM != 1)
 		{
-			Sp_red[i] * _GFl._Inverse(Sp_red[i]._LM);
+			Sp_red[i] * _GFl._Inverse[Sp_red[i]._LM];
 		}
 		int index = Sp_red[i]._LMdeg_index;
 #pragma omp parallel for
@@ -44,7 +42,9 @@ void LB<GF>::Gauss_rev(vector<GF> &Sp_red)
 			if (i == j) continue;
 			if (Sp_red[j]._Coeff[index] != 0)
 			{
-				Sp_red[j] + (Sp_red[i] * (_GFl._Add_inverse(Sp_red[j]._Coeff[index])));
+				GF temp = Sp_red[i];
+				temp * (_GFl._Add_inverse[Sp_red[j]._Coeff[index]]);
+				Sp_red[j] + temp;
 			}
 		}
 	}

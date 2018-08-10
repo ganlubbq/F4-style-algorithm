@@ -102,9 +102,9 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 	while (_Decision._D.size() > 0)
 	{
-		_Spoly.erase();
+		_Spoly.spoly_erase();
 		_Spoly.calc_Spoly(_Equations, _Decision._D);
-		_Decision._d_erase();
+		_Decision.d_erase();
 		_Red.calc_red(_Spoly._Spolies,_Equations);
 		//‚±‚±Spoly‚¤‚Ü‚­g‚¦‚ÎÁ‚¹‚é?
 		_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // ˜AŒ‹ S = S or Red
