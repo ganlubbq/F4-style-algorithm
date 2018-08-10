@@ -14,6 +14,7 @@ public:
 	//function
 	void decision(vector<GF> &G);
 	void Gebauer_Moller(vector<GF> &G);
+	void Gebauer_Moller_mono(vector<GF> &G);
 	void Buchberger(vector<GF> &G);
 	void sort_D(vector<GF> &G);
 	void d_erase();
@@ -30,6 +31,7 @@ inline void Decision<GF>::decision(vector<GF> &G)
 	Buchberger(G);
 	sort_D(G);
 }
+
 
 template<class GF>
 inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
@@ -89,6 +91,50 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 						}
 					}
 					k--;
+				}
+			}
+		}
+	}
+}
+
+//‘½€®ˆêŒÂ’Ç‰Á‚µ‚½‚Æ‚«‚Ì‚İ“®‚­
+template<class GF>
+inline void Decision<GF>::Gebauer_Moller_mono(vector<GF> &G)
+{
+	for (int i = 0; i < G.size(); i++)
+	{
+		for (int j = G.size() - 1; j < G.size(); j++)
+		{
+			//F
+			int flag = 0;
+			int k = 0;
+			while (k < i)
+			{
+				if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+				{
+					flag++;
+					_D.push_back({ i,j });
+					break;
+				}
+				k++;
+			}
+
+			//M
+			if (flag == 0)
+			{
+				int k = 0;
+				while (k < j)
+				{
+					if (_GFd._Degree.reducible(_GFd._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+						{
+							flag++;
+							_D.push_back({ i,j });
+							break;
+						}
+					}
+					k++;
 				}
 			}
 		}

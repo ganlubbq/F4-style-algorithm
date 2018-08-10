@@ -17,6 +17,7 @@ public:
 
 };
 
+//SpolyåvéZÅ@
 template<class GF>
 inline void Spoly<GF>::calc_Spoly(vector<GF> &G, vector<int> &D)
 {

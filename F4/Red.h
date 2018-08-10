@@ -10,7 +10,7 @@ class Red
 public:
 	//variables
 	GF _GFr;
-	vector<GF> _Red;
+	vector<GF> _Reds;
 
 	//function
 	void calc_red(vector<GF> &Spolies,vector<GF> &G);
@@ -66,7 +66,7 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 					vector<unsigned char> temp_deg = _Gfr._degree.vec_sub(_Gfr._Degree.index_to_degree(M_index[i]),G[j]._LMdeg);
 					GF temp_g = G[j];
 					temp_g * temp_deg;
-					_Red.push_back(temp_g);
+					_Reds.push_back(temp_g);
 					temp_g = G[j];
 					temp_g.LM_del();
 					temp_g * temp_deg;

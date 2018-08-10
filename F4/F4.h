@@ -93,14 +93,39 @@ inline int F4<GF,Deci, Spol, Red, LB>::var_deg_comb(int n, int r) {//n•Ï”rŸ‘½
 	return ans;
 }
 
+//F4ƒAƒ‹ƒSƒŠƒYƒ€
 template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
-	for (auto itr = _Equations.begin(); itr != _Equations.end(); itr++)
-	{
-		printvec((*itr)._Coeff);
-	}
-	//init
+	//Spolyi‚è‚İ init
 	_Decision.decision(_Equations);
 
+	while (_Decision._D.size() > 0)
+	{
+		_Spoly.erase();
+		_Spoly.calc_Spoly(_Equations, _Decision._D);
+		_Decision._d_erase();
+		_Red.calc_red(_Spoly._Spolies,_Equations);
+		//‚±‚±Spoly‚¤‚Ü‚­g‚¦‚ÎÁ‚¹‚é?
+		_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // ˜AŒ‹ S = S or Red
+		_LB.calc_LB(_Spoly._Spolies);
+		for (int i = 0; i < _Spoly._Spolies.size(); i++)
+		{
+			//0‘½€®”»’è
+			if (_Spoly._Spolies[i]._LMdeg_index != -1)
+			{
+				bool flag = true;
+				for (int j = 0;j <_Red._Reds.size();j++)
+				{
+					if (_GFf._Degree.reducible(_Spoly._Spolies[i]._LMdeg, _Red._Reds[j]._LMdeg)) flag = false;
+				}
+				if (flag)
+				{
+					_Equations.push_back(_Spoly._Spolies[i]);
+					_Decision.Gebauer_Moller_mono(_Equations);
+				}
+			}
+		}
+		_Decision.Buchberger(_Equations);
+	}
 }
