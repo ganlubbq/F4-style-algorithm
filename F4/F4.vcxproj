@@ -127,6 +127,7 @@
     <ClInclude Include="F4.h" />
     <ClInclude Include="GF31.h" />
     <ClInclude Include="Poly.h" />
+    <ClInclude Include="Red.h" />
     <ClInclude Include="Spoly.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

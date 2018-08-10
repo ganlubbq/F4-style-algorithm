@@ -117,6 +117,7 @@ public:
 	void mul28();
 	void mul29();
 	void mul30();
+	void LM_del();
 
 	//operator ©•ª‚É‚µ‚©ì—p‚µ‚È‚¢@{‚Í‘‚«Š·‚¦‚é‚©‚àH
 	//void operator+(Poly_GF31_simd &poly);
@@ -666,6 +667,12 @@ inline void GF31::mul30() {
 	for (size_t i = _Div_single_size * single_size; i <_Coeff_size; ++i) {
 		_Coeff[i] = (30 * _Coeff[i]) % 31;
 	}
+}
+
+inline void GF31::LM_del() {
+	_Coeff[_LMdeg_index] = 0;
+	set_LM();
+	set_LMdeg();
 }
 
 inline void GF31::operator+(GF31 poly)
