@@ -29,8 +29,10 @@ int Poly::_Max_degree = 7;
 
 #ifdef _GF31_ 
 Decision<GF31> dd;
-int F4<GF31,Decision<GF31>>::_Variables = variables;
-Decision<GF31> F4<GF31,Decision<GF31>>::_Decision = dd;
+Spoly<GF31> ss;
+int F4<GF31,Decision<GF31>,Spoly<GF31>>::_Variables = variables;
+Decision<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>>::_Decision = dd;
+Spoly<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>>::_Spoly = ss;
 #endif //_GF31_
 
 void printvec(vector<unsigned char> vec)
@@ -58,7 +60,7 @@ int main()
 	g * e;
 	printvec(g._Coeff);*/
 
-	F4<GF31,Decision<GF31>> f4(filename);
+	F4<GF31,Decision<GF31>, Spoly<GF31>> f4(filename);
 	f4.F4_style();
 
 	system("pause");

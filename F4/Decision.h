@@ -16,6 +16,7 @@ public:
 	void Gebauer_Moller(vector<GF> &G);
 	void Buchberger(vector<GF> &G);
 	void sort_D(vector<GF> &G);
+	void d_erase();
 
 	//&使うとバグる　正確には計算結果をそのまま引数にとれない
 	virtual bool veceq(vector<unsigned char> f, vector<unsigned char> g);
@@ -23,7 +24,7 @@ public:
 };
 
 template <class GF>
-void Decision<GF>::decision(vector<GF> &G)
+inline void Decision<GF>::decision(vector<GF> &G)
 {
 	Gebauer_Moller(G);
 	Buchberger(G);
@@ -31,7 +32,7 @@ void Decision<GF>::decision(vector<GF> &G)
 }
 
 template<class GF>
-void Decision<GF>::Gebauer_Moller(vector<GF> &G)
+inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 {
 	for (int i = 0; i < G.size(); i++)
 	{
@@ -96,7 +97,7 @@ void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 
 //ゲバウアメラーの後じゃないと動かない　書き換えれば先こっちで絞り込みも可能
 template<class GF>
-void Decision<GF>::Buchberger(vector<GF> &G)
+inline void Decision<GF>::Buchberger(vector<GF> &G)
 {
 	vector<vector<int>> temp;
 	for (int i = 0;i < _D.size();i++)
@@ -112,7 +113,7 @@ void Decision<GF>::Buchberger(vector<GF> &G)
 
 //Spolyは左と右分けることが前提　sortする Max_degreeの更新も
 template<class GF>
-void Decision<GF>::sort_D(vector<GF> &G)
+inline void Decision<GF>::sort_D(vector<GF> &G)
 {
 	_D_sort.resize(_GFd._Max_degree);
 
@@ -129,10 +130,16 @@ void Decision<GF>::sort_D(vector<GF> &G)
 	}
 }
 
+template<class GF>
+inline void Decision<GF>::d_erase()
+{
+	_D.resize(0);
+	_D_sort.resize(0);
+}
 
 //veq イコール判定機
 template<class GF>
-bool Decision<GF>::veceq(vector<unsigned char> f,vector<unsigned char> g)
+inline bool Decision<GF>::veceq(vector<unsigned char> f,vector<unsigned char> g)
 {
 	for (int i = 0; i < f.size(); i++)
 	{

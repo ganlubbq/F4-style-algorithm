@@ -8,7 +8,7 @@
 using namespace std;
 
 //F4アルゴリズム　ファイル読み込みは標準実装　大きな書き換えは継承すべし
-template <class GF, class Deci>
+template <class GF, class Deci,class Spol>
 class F4
 {
 public:
@@ -18,9 +18,9 @@ public:
 	string file_name;
 	static int _Variables;
 	static Deci _Decision;
+	static Spol _Spoly;
 	GF _GFf;
 
-	vector<GF> _Spolies;
 	vector<GF> _Equations;
 
 	//function
@@ -42,15 +42,15 @@ public:
 	void F4_style();
 };
 
-template <class GF, class Deci>
-F4<GF,Deci>::F4(string filename)
+template <class GF, class Deci, class Spol>
+F4<GF,Deci, Spol>::F4(string filename)
 {
 	file_name = filename;
 	file_read();
 }
 
-template <class GF, class Deci>
-void F4<GF,Deci>::file_read()
+template <class GF, class Deci, class Spol>
+void F4<GF,Deci, Spol>::file_read()
 {
 	FILE *fp;
 	fp = fopen(file_name.c_str(), "r");
@@ -81,8 +81,8 @@ void F4<GF,Deci>::file_read()
 }
 
 //n変数r次多項式までの全項数
-template <class GF, class Deci>
-inline int F4<GF,Deci>::var_deg_comb(int n, int r) {//n変数r次多項式までの全項数
+template <class GF, class Deci, class Spol>
+inline int F4<GF,Deci, Spol>::var_deg_comb(int n, int r) {//n変数r次多項式までの全項数
 	int ans = 1;
 	n += r;
 	for (int div = 1; div <= r; ++div, --n) {
@@ -91,8 +91,8 @@ inline int F4<GF,Deci>::var_deg_comb(int n, int r) {//n変数r次多項式までの全項数
 	return ans;
 }
 
-template <class GF, class Deci>
-inline void F4<GF, Deci>::F4_style()
+template <class GF, class Deci, class Spol>
+inline void F4<GF, Deci, Spol>::F4_style()
 {
 	for (auto itr = _Equations.begin(); itr != _Equations.end(); itr++)
 	{
