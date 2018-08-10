@@ -19,6 +19,8 @@ public:
 	static int _Variables;
 	static Deci _Decision;
 	static Spol _Spoly;
+	static Red _Red;
+	static LB _LB;
 	GF _GFf;
 
 	vector<GF> _Equations;
@@ -42,15 +44,15 @@ public:
 	void F4_style();
 };
 
-template <class GF, class Deci, class Spol>
-F4<GF,Deci, Spol>::F4(string filename)
+template <class GF, class Deci, class Spol, class Red, class LB>
+F4<GF,Deci, Spol,Red,LB>::F4(string filename)
 {
 	file_name = filename;
 	file_read();
 }
 
-template <class GF, class Deci, class Spol>
-void F4<GF,Deci, Spol>::file_read()
+template <class GF, class Deci, class Spol, class Red, class LB>
+void F4<GF,Deci, Spol, Red, LB>::file_read()
 {
 	FILE *fp;
 	fp = fopen(file_name.c_str(), "r");
@@ -81,8 +83,8 @@ void F4<GF,Deci, Spol>::file_read()
 }
 
 //n•Ï”rŸ‘½€®‚Ü‚Å‚Ì‘S€”
-template <class GF, class Deci, class Spol>
-inline int F4<GF,Deci, Spol>::var_deg_comb(int n, int r) {//n•Ï”rŸ‘½€®‚Ü‚Å‚Ì‘S€”
+template <class GF, class Deci, class Spol, class Red, class LB>
+inline int F4<GF,Deci, Spol, Red, LB>::var_deg_comb(int n, int r) {//n•Ï”rŸ‘½€®‚Ü‚Å‚Ì‘S€”
 	int ans = 1;
 	n += r;
 	for (int div = 1; div <= r; ++div, --n) {
@@ -91,8 +93,8 @@ inline int F4<GF,Deci, Spol>::var_deg_comb(int n, int r) {//n•Ï”rŸ‘½€®‚Ü‚Å‚Ì
 	return ans;
 }
 
-template <class GF, class Deci, class Spol>
-inline void F4<GF, Deci, Spol>::F4_style()
+template <class GF, class Deci, class Spol, class Red, class LB>
+inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
 	for (auto itr = _Equations.begin(); itr != _Equations.end(); itr++)
 	{

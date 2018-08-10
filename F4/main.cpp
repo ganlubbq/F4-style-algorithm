@@ -20,6 +20,12 @@ string GF31::_DX = "d";
 //Spoly include
 #include "Spoly.h"
 
+//Red include
+#include "Red.h"
+
+//LB include
+#include "LB.h"
+
 static const int variables = 2;
 string filename = "GF31_2-0.txt";
 //Polyä÷òAèâä˙âª
@@ -33,9 +39,13 @@ int Poly::_Max_degree = 7;
 #ifdef _GF31_ 
 Decision<GF31> dd;
 Spoly<GF31> ss;
-int F4<GF31,Decision<GF31>,Spoly<GF31>>::_Variables = variables;
-Decision<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>>::_Decision = dd;
-Spoly<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>>::_Spoly = ss;
+Red<GF31> rr;
+LB<GF31> ll;
+int F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Variables = variables;
+Decision<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Decision = dd;
+Spoly<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Spoly = ss;
+Red<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Red = rr;
+LB<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_LB = ll;
 #endif //_GF31_
 
 void printvec(vector<unsigned char> vec)
@@ -63,7 +73,7 @@ int main()
 	g * e;
 	printvec(g._Coeff);*/
 
-	F4<GF31,Decision<GF31>, Spoly<GF31>> f4(filename);
+	F4<GF31,Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename);
 	f4.F4_style();
 
 	system("pause");
