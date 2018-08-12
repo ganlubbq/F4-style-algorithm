@@ -26,15 +26,15 @@ string GF31::_DX = "d";
 //LB include
 #include "LB.h"
 
-static const int variables = 2;
-string filename = "GF31_2-0.txt";
+static const int variables = 7;
+string filename = "GF31_7-0.txt";
 //PolyŠÖ˜A‰Šú‰»
 #ifdef D1
 Degree_table d(variables);
 Degree_table Poly::_Degree = d;
 #endif //D1
 
-int Poly::_Max_degree = 7;
+int Poly::_Max_degree = 5;
 
 #ifdef _GF31_ 
 Decision<GF31> dd;

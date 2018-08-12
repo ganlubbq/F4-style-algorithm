@@ -39,7 +39,7 @@ void LB<GF>::Gauss_rev(vector<GF> &Sp_red)
 		Sp_red[i]._Div_single_size = Sp_red[i]._Coeff_size / single_size;
 	}
 
-	cout << max_length << endl;
+	//cout << max_length << endl;
 
 	for (int i = 0; i < Sp_red.size(); i++)
 	{

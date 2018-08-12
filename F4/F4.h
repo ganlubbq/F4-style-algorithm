@@ -111,42 +111,40 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	{
 		printvec(_Equations[i]._Coeff);
 	}*/
+	
 	//SpolyçiÇËçûÇ› init
 	_Decision.decision(_Equations);
-	for (int i = 0; i < _Decision._D.size(); i++)
+	/*for (int i = 0; i < _Decision._D.size(); i++)
 	{
 		printvec(_Decision._D[i]);
-	}
+	}*/
 
-	cout << "1" << endl;
 	while (_Decision._D.size() > 0)
 	{
 		_Spoly.spoly_erase();
-		cout << "2" << endl;
 		_Spoly.calc_Spoly(_Equations, _Decision._D);
-		for (int i = 0;i < _Spoly._Spolies.size();i++)
+		/*for (int i = 0;i < _Spoly._Spolies.size();i++)
 		{
 			printvec(_Spoly._Spolies[i]._Coeff);
-		}
-		cout << "3" << endl;
+		}*/
 		_Decision.d_erase();
 		_Red.calc_red(_Spoly._Spolies,_Equations);
-		cout << _Red._Reds.size() << "REd" << endl;
+		//cout << _Red._Reds.size() << "REd" << endl;
 		//printvec(_Red._Reds[0]._Coeff);
 
 		//Ç±Ç±SpolyÇ§Ç‹Ç≠égÇ¶ÇŒè¡ÇπÇÈ?
 		_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // òAåã S = S or Red
-		for (int i = 0; i < _Spoly._Spolies.size(); i++)
+		/*for (int i = 0; i < _Spoly._Spolies.size(); i++)
 		{
 			printvec(_Spoly._Spolies[i]._Coeff);
-		}
+		}*/
 		_LB.calc_LB(_Spoly._Spolies);
 
-		cout << "LB" << endl;
+		/*cout << "LB" << endl;
 		for (int i = 0; i < _Spoly._Spolies.size(); i++)
 		{
 			printvec(_Spoly._Spolies[i]._Coeff);
-		}
+		}*/
 		for (int i = 0; i < _Spoly._Spolies.size(); i++)
 		{
 			//0ëΩçÄéÆîªíË
@@ -164,20 +162,25 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				if (flag)
 				{
 					_Equations.push_back(_Spoly._Spolies[i]);
+					//_LB.Gauss_rev(_Equations);
 					_Decision.Gebauer_Moller_mono(_Equations);
 				}
 			}
 		}
-		cout << "add" << endl;
+		/*cout << "add" << endl;
 		for (int i = 0; i < _Equations.size(); i++)
 		{
 			printvec(_Equations[i]._Coeff);
-		}
+		}*/
 		_Decision.Buchberger(_Equations);
-		for (int i = 0; i < _Decision._D.size(); i++)
+		/*for (int i = 0; i < _Decision._D.size(); i++)
 		{
 			printvec(_Decision._D[i]);
-		}
-		system("pause");
+		}*/
+		cout << _Decision._D.size() << endl;
+	}
+	for (int i = 0; i < _Equations.size(); i++)
+	{
+		printvec(_Equations[i]._Coeff);
 	}
 }
