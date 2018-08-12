@@ -807,7 +807,7 @@ inline void GF31::operator*(vector<unsigned char> &monomial_deg)
 	//_Coeffのresizeと_Coeff_sizeとdiv_single_size更新
 	while (_Coeff_size < _LMdeg_index + 1)
 	{
-		_Coeff_size << 1;
+		_Coeff_size = _Coeff_size << 1;
 	}
 	_Coeff.resize(_Coeff_size);
 	_Div_single_size = _Coeff_size / single_size;
@@ -827,4 +827,6 @@ inline void GF31::operator*(vector<unsigned char> &monomial_deg)
 		}
 	}
 	_Coeff = coeff_temp;
+	//LM更新
+	_LM = _Coeff[_LMdeg_index];
 }

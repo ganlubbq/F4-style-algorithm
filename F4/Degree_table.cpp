@@ -118,7 +118,7 @@ inline vector<unsigned char> Degree_table::LCM(vector<unsigned char> &f, vector<
 	for (int i = 0; i < f.size(); i++)
 	{
 		if (f[i] < g[i]) temp[i] = g[i];
-		else temp[i] = g[i];
+		else temp[i] = f[i];
 	}
 	return temp;
 }

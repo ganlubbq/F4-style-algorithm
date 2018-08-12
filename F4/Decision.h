@@ -60,7 +60,7 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 				int k = 0;
 				while (k < j)
 				{
-					if (_GFd._Degree.reducible(_GFd._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+					if (_GFd._Degree.reducible(G[k]._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
 					{
 						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
 						{
@@ -79,7 +79,7 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 				int k = G.size() - 1;
 				while (k > j)
 				{
-					if (_GFd._Degree.reducible(_GFd._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+					if (_GFd._Degree.reducible(G[k]._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
 					{
 						if (!veceq(_GFd._Degree.LCM(G[i]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
 						{
@@ -101,7 +101,7 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 template<class GF>
 inline void Decision<GF>::Gebauer_Moller_mono(vector<GF> &G)
 {
-	for (int i = 0; i < G.size(); i++)
+	for (int i = 0; i < G.size() - 1; i++)
 	{
 		for (int j = G.size() - 1; j < G.size(); j++)
 		{
@@ -125,7 +125,7 @@ inline void Decision<GF>::Gebauer_Moller_mono(vector<GF> &G)
 				int k = 0;
 				while (k < j)
 				{
-					if (_GFd._Degree.reducible(_GFd._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+					if (_GFd._Degree.reducible(G[k]._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
 					{
 						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
 						{

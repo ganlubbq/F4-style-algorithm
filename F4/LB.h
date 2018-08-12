@@ -26,6 +26,21 @@ void LB<GF>::calc_LB(vector<GF> &Sp_red)
 template <class GF>
 void LB<GF>::Gauss_rev(vector<GF> &Sp_red)
 {
+	//vector sizeí≤êÆ
+	int max_length = 0;
+	for (int i = 0; i < Sp_red.size(); i++)
+	{
+		if (max_length < Sp_red[i]._LMdeg_index + 1) max_length = Sp_red[i]._LMdeg_index + 1;
+	}
+	for (int i = 0; i < Sp_red.size(); i++)
+	{
+		Sp_red[i]._Coeff.resize(max_length);
+		Sp_red[i]._Coeff_size = max_length;
+		Sp_red[i]._Div_single_size = Sp_red[i]._Coeff_size / single_size;
+	}
+
+	cout << max_length << endl;
+
 	for (int i = 0; i < Sp_red.size(); i++)
 	{
 		//0ëΩçÄéÆ

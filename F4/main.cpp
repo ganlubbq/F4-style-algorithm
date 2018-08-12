@@ -48,31 +48,8 @@ Red<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Red = rr;
 LB<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_LB = ll;
 #endif //_GF31_
 
-void printvec(vector<unsigned char> vec)
-{
-	cout << "[ ";
-	for (int i = 0; i < vec.size(); i++)
-	{
-		cout << (int)vec[i] << " ";
-	}
-	cout << "]" << endl;
-}
-
 int main()
 {
-	/*vector<unsigned char> a = {2,7,4,5,6,2,8,9,5,14,17,25,28,30,5,3,7,9,12,4};
-	vector<unsigned char> b = {2,7,4,5,6,2,8,9,5,14,17,25,28,30,5,3,7,9,12,4};
-	GF31 f(a),g(b);
-
-	printvec(f._Coeff);
-	printvec(g._Coeff);
-
-	f + g;
-	printvec(f._Coeff);
-	unsigned char e = 5;
-	g * e;
-	printvec(g._Coeff);*/
-
 	F4<GF31,Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename);
 	f4.F4_style();
 
