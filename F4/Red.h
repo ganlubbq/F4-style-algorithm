@@ -41,12 +41,9 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 			}
 		}
 	}
-	/*for (int i = 0; i < M_index.size(); i++)
-	{
-		cout << M_index[i] << "M" << endl;
-	}
+
 	//変換　後でやると時間食いそう
-	vector<vector<unsigned char>> M_deg;
+	/*vector<vector<unsigned char>> M_deg;
 	M_deg.resize(M_index);
 	for (int i = 0; i < M_deg.size(); i++)
 	{
@@ -86,22 +83,10 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 				}
 			}
 		}
-		/*for (int i = 0; i < M_index.size(); i++)
-		{
-			cout << M_index[i] << "MM" << endl;
-		}*/
 		//使ったやつ削除
 		M_index.erase(M_index.begin(), M_index.begin() + size_before);
-		/*for (int i = 0; i < M_index.size(); i++)
-		{
-			cout << M_index[i] << "MMM" << endl;
-		}*/
 		std::sort(M_index.begin(), M_index.end());
 		//重複削除
 		M_index.erase(std::unique(M_index.begin(), M_index.end()), M_index.end());
-		/*for (int i = 0; i < M_index.size(); i++)
-		{
-			cout << M_index[i] << "MMMM" << endl;
-		}*/
 	}
 }
