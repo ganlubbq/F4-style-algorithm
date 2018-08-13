@@ -678,6 +678,13 @@ inline void GF31::LM_del() {
 
 inline void GF31::operator+(GF31 poly)
 {
+	/*int max,before;
+	before = _Coeff.size();
+	if (_LMdeg_index < poly._LMdeg_index) max = poly._LMdeg_index + 1;
+	else max = _LMdeg_index + 1;
+	_Coeff.resize(max);
+	poly._Coeff.resize(max);*/
+
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 	TYPE_AVX *vy = (TYPE_AVX *) &(poly._Coeff[0]);
@@ -694,6 +701,8 @@ inline void GF31::operator+(GF31 poly)
 	}
 	set_LM();
 	set_LMdeg();
+	/*_Coeff.resize(before);
+	poly._Coeff.resize(before);*/
 }
 
 //coeff倍

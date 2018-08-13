@@ -26,8 +26,8 @@ string GF31::_DX = "d";
 //LB include
 #include "LB.h"
 
-static const int variables = 7;
-string filename = "GF31_7-0.txt";
+static const int variables = 12;
+string filename = "GF31_12-0.txt";
 //PolyŠÖ˜A‰Šú‰»
 #ifdef D1
 Degree_table d(variables);
@@ -54,6 +54,6 @@ int main()
 	F4<GF31,Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename);
 	f4.F4_style();
 
-	system("pause");
+	//system("pause");
 	return 0;
 }

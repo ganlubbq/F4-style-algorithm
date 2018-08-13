@@ -174,6 +174,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	}
 	for (int i = 1; i < _Answer.size(); i++)
 	{
+		_Answer[i]._Coeff.resize(_Variables + 1);
 		printvec(_Answer[i]._Coeff);
 	}
 }
