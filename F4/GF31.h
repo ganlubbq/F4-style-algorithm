@@ -122,7 +122,7 @@ public:
 
 	//operator 自分にしか作用しない　＋は書き換えるかも？
 	//void operator+(Poly_GF31_simd &poly);
-	void operator+(GF31 poly);
+	void operator+(GF31 &poly);
 	void operator*(unsigned char &n);
 	void operator*(vector<unsigned char> &monomial_deg);
 };
@@ -676,7 +676,7 @@ inline void GF31::LM_del() {
 	set_LMdeg();
 }
 
-inline void GF31::operator+(GF31 poly)
+inline void GF31::operator+(GF31 &poly)
 {
 	/*int max,before;
 	before = _Coeff.size();
@@ -685,18 +685,22 @@ inline void GF31::operator+(GF31 poly)
 	_Coeff.resize(max);
 	poly._Coeff.resize(max);*/
 
+	int temp_Div_single_size;
+	if (_Div_single_size < poly._Div_single_size) temp_Div_single_size = poly._Div_single_size;
+	else temp_Div_single_size = _Div_single_size;
+
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 	TYPE_AVX *vy = (TYPE_AVX *) &(poly._Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size; ++i) {
+	for (size_t i = 0; i < temp_Div_single_size; ++i) {
 		//vec += vec2;
 		vx[i] = ADD_AVX(vx[i], vy[i]);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = _Div_single_size * single_size; i < _Coeff_size; ++i) {
+	for (size_t i = temp_Div_single_size * single_size; i < _Coeff_size; ++i) {
 		_Coeff[i] = (_Coeff[i] + poly._Coeff[i]) % 31;
 	}
 	set_LM();
@@ -819,7 +823,7 @@ inline void GF31::operator*(vector<unsigned char> &monomial_deg)
 		_Coeff_size = _Coeff_size << 1;
 	}
 	_Coeff.resize(_Coeff_size);
-	_Div_single_size = _Coeff_size / single_size;
+	_Div_single_size = (_LMdeg_index + 1) / single_size;
 	if (_Max_degree < _Degree.calc_total_deg(_LMdeg))
 	{
 		_Max_degree = _Degree.calc_total_deg(_LMdeg);
@@ -828,7 +832,7 @@ inline void GF31::operator*(vector<unsigned char> &monomial_deg)
 
 	//スライド処理
 	vector<unsigned char> coeff_temp(_Coeff_size);
-	for (int i = 0; i < _Coeff_size; i++)
+	for (int i = 0; i <_LMdeg_index + 1; i++)
 	{
 		if (_Coeff[i] != 0)
 		{

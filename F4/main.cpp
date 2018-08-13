@@ -54,6 +54,6 @@ int main()
 	F4<GF31,Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename);
 	f4.F4_style();
 
-	//system("pause");
+	system("pause");
 	return 0;
 }
