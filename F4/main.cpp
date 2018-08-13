@@ -46,6 +46,7 @@ Decision<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Decisi
 Spoly<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Spoly = ss;
 Red<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Red = rr;
 LB<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_LB = ll;
+int F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Parallel_div = 256;
 #endif //_GF31_
 
 int main()

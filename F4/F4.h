@@ -20,8 +20,9 @@ public:
 	static Spol _Spoly;
 	static Red _Red;
 	static LB _LB;
+	static int _Parallel_div;
 	GF _GFf;
-
+	vector<GF> _Answer;
 	vector<GF> _Equations;
 
 	//function
@@ -107,6 +108,8 @@ inline int F4<GF,Deci, Spol, Red, LB>::var_deg_comb(int n, int r) {//n•Ï”rŸ‘½
 template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
+	_Answer.resize(_Variables + 1);
+	int count = 0;
 	/*for (int i = 0; i < _Equations.size(); i++)
 	{
 		printvec(_Equations[i]._Coeff);
@@ -162,11 +165,19 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				if (flag)
 				{
 					_Equations.push_back(_Spoly._Spolies[i]);
+					if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
+					{
+						_Answer[_Spoly._Spolies[i]._LMdeg_index] = _Spoly._Spolies[i];
+						count++;
+						if (count == _Variables) break;
+					}
 					//_LB.Gauss_rev(_Equations);
 					_Decision.Gebauer_Moller_mono(_Equations);
 				}
 			}
+			if (count == _Variables) break;
 		}
+		if (count == _Variables) break;
 		/*cout << "add" << endl;
 		for (int i = 0; i < _Equations.size(); i++)
 		{
@@ -179,8 +190,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 		}*/
 		cout << _Decision._D.size() << endl;
 	}
-	for (int i = 0; i < _Equations.size(); i++)
+	for (int i = 1; i < _Answer.size(); i++)
 	{
-		printvec(_Equations[i]._Coeff);
+		printvec(_Answer[i]._Coeff);
 	}
 }
