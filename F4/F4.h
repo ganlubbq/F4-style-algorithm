@@ -229,6 +229,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	std::ofstream writing_all;
 	writing_all.open(all_file_name, std::ios::app);
 
+	writing_file << endl;
 	writing_file << end - start << endl;
 	writing_all << end - start << endl;
 	for (int i = 1; i < _Answer.size(); i++)
