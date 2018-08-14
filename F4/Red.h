@@ -20,7 +20,7 @@ public:
 template<class GF>
 void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 {
-	//spoly³‹K‰»‚µ‚Ä‚ê‚Î‚±‚±‚Í‚µ‚å‚ê‚é?
+	//spoly³‹K‰»‚µ‚Ä‚ê‚Î‚±‚±‚Í‚µ‚å‚ê‚é? ‘S’P€®M‚Éin
 	vector<int> M_index;
 	for (int i = 0; i < Spolies.size(); i++)
 	{

@@ -685,22 +685,26 @@ inline void GF31::operator+(GF31 &poly)
 	_Coeff.resize(max);
 	poly._Coeff.resize(max);*/
 
-	int temp_Div_single_size;
-	if (_Div_single_size < poly._Div_single_size) temp_Div_single_size = poly._Div_single_size;
-	else temp_Div_single_size = _Div_single_size;
+	/*int temp_Div_single_size;
+	if (_Div_single_size < poly._Div_single_size)
+	{
+		temp_Div_single_size = poly._Div_single_size;
+		_Coeff.resize(poly._Coeff_size);
+	}
+	else temp_Div_single_size = _Div_single_size;*/
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 	TYPE_AVX *vy = (TYPE_AVX *) &(poly._Coeff[0]);
 
-	for (size_t i = 0; i < temp_Div_single_size; ++i) {
+	for (size_t i = 0; i < _Div_single_size; ++i) {
 		//vec += vec2;
 		vx[i] = ADD_AVX(vx[i], vy[i]);
 		MOD31(vx[i]);
 	}
 
 	// SIMD計算で残った部分
-	for (size_t i = temp_Div_single_size * single_size; i < _Coeff_size; ++i) {
+	for (size_t i = _Div_single_size * single_size; i < _Coeff_size; ++i) {
 		_Coeff[i] = (_Coeff[i] + poly._Coeff[i]) % 31;
 	}
 	set_LM();
