@@ -7,7 +7,7 @@ class Decision
 public:
 	Decision() {};
 	//variables
-	vector<vector<int>> _D;
+	//vector<vector<int>> _D;
 	vector<vector<vector<int>>> _D_sort;//total degree順
 	GF _GFd;
 
@@ -16,8 +16,9 @@ public:
 	void Gebauer_Moller(vector<GF> &G);
 	void Gebauer_Moller_mono(vector<GF> &G);
 	void Buchberger(vector<GF> &G);
-	void sort_D(vector<GF> &G);
-	void d_erase();
+	//void sort_D(vector<GF> &G);
+	//void d_erase();
+	void d_sort_erase(int n);
 
 	//&使うとバグる　正確には計算結果をそのまま引数にとれない
 	virtual bool veceq(vector<unsigned char> f, vector<unsigned char> g);
@@ -27,9 +28,10 @@ public:
 template <class GF>
 inline void Decision<GF>::decision(vector<GF> &G)
 {
+	_D_sort.resize(_GFd._Max_degree + 1);
 	Gebauer_Moller(G);
 	Buchberger(G);
-	sort_D(G);
+	//sort_D(G);
 }
 
 
@@ -43,15 +45,23 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 			//F
 			int flag = 0;
 			int k = 0;
+			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg);
 			while (k < i)
 			{
-				if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+				if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
 				{
 					flag++;
-					_D.push_back({ i,j });
+					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+					if (_GFd._Max_degree < temp_T_ij_deg)
+					{
+						_GFd._Max_degree = temp_T_ij_deg;
+						_GFd._Degree.update_degree(temp_T_ij_deg);
+						_D_sort.resize(_GFd._Max_degree + 1);
+					}
+					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
 					break;
 				}
-				k ++ ;
+				k++;
 			}
 
 			//M
@@ -60,12 +70,19 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 				int k = 0;
 				while (k < j)
 				{
-					if (_GFd._Degree.reducible(G[k]._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+					if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
 					{
-						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
 						{
 							flag++;
-							_D.push_back({ i,j });
+							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+							if (_GFd._Max_degree < temp_T_ij_deg)
+							{
+								_GFd._Max_degree = temp_T_ij_deg;
+								_GFd._Degree.update_degree(temp_T_ij_deg);
+								_D_sort.resize(_GFd._Max_degree + 1);
+							}
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
 							break;
 						}
 					}
@@ -79,13 +96,20 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 				int k = G.size() - 1;
 				while (k > j)
 				{
-					if (_GFd._Degree.reducible(G[k]._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+					if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
 					{
-						if (!veceq(_GFd._Degree.LCM(G[i]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+						if (!veceq(_GFd._Degree.LCM(G[i]._LMdeg, G[k]._LMdeg), T_ij))
 						{
-							if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+							if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
 							{
-								_D.push_back({ i,j });
+								int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+								if (_GFd._Max_degree < temp_T_ij_deg)
+								{
+									_GFd._Max_degree = temp_T_ij_deg;
+									_GFd._Degree.update_degree(temp_T_ij_deg);
+									_D_sort.resize(_GFd._Max_degree + 1);
+								}
+								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
 								break;
 							}
 						}
@@ -108,12 +132,20 @@ inline void Decision<GF>::Gebauer_Moller_mono(vector<GF> &G)
 			//F
 			int flag = 0;
 			int k = 0;
+			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg);
 			while (k < i)
 			{
-				if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+				if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
 				{
 					flag++;
-					_D.push_back({ i,j });
+					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+					if (_GFd._Max_degree < temp_T_ij_deg)
+					{
+						_GFd._Max_degree = temp_T_ij_deg;
+						_GFd._Degree.update_degree(temp_T_ij_deg);
+						_D_sort.resize(_GFd._Max_degree + 1);
+					}
+					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
 					break;
 				}
 				k++;
@@ -125,12 +157,19 @@ inline void Decision<GF>::Gebauer_Moller_mono(vector<GF> &G)
 				int k = 0;
 				while (k < j)
 				{
-					if (_GFd._Degree.reducible(G[k]._LMdeg, _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+					if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
 					{
-						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg)))
+						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
 						{
 							flag++;
-							_D.push_back({ i,j });
+							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+							if (_GFd._Max_degree < temp_T_ij_deg)
+							{
+								_GFd._Max_degree = temp_T_ij_deg;
+								_GFd._Degree.update_degree(temp_T_ij_deg);
+								_D_sort.resize(_GFd._Max_degree + 1);
+							}
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
 							break;
 						}
 					}
@@ -146,46 +185,29 @@ template<class GF>
 inline void Decision<GF>::Buchberger(vector<GF> &G)
 {
 	vector<vector<int>> temp;
-	for (int i = 0;i < _D.size();i++)
+	for (int j = 0; j < _D_sort.size(); j++)
 	{
-		if (!(_GFd._Degree.gcd_1(G[_D[i][0]]._LMdeg,G[_D[i][1]]._LMdeg)))
+		for (int i = 0; i < _D_sort[j].size(); i++)
 		{
-			temp.push_back(_D[i]);
+			if (!(_GFd._Degree.gcd_1(G[_D_sort[j][i][0]]._LMdeg, G[_D_sort[j][i][1]]._LMdeg)))
+			{
+				temp.push_back(_D_sort[j][i]);
+			}
 		}
-	}
-	_D.resize(temp.size());
-	_D = temp;
-}
-
-//Spolyは左と右分けることが前提　sortする Max_degreeの更新も
-template<class GF>
-inline void Decision<GF>::sort_D(vector<GF> &G)
-{
-	_D_sort.resize(_GFd._Max_degree);
-
-	for (int i = 0; i < _D.size(); i++)
-	{
-		int lcm_deg = _GFd._Degree.calc_total_deg(_GFd._Degree.LCM(G[_D[i][0]]._LMdeg, G[_D[i][1]]._LMdeg));
-		if (_GFd._Max_degree < lcm_deg)
-		{
-			_GFd._Max_degree = lcm_deg;
-			_GFd._Degree.update_degree(lcm_deg);
-			_D_sort.resize(_GFd._Max_degree);
-		}
-		_D_sort[lcm_deg].push_back(_D[i]);
+		_D_sort[j].resize(temp.size());
+		_D_sort[j] = temp;
 	}
 }
 
 template<class GF>
-inline void Decision<GF>::d_erase()
+void Decision<GF>::d_sort_erase(int n)
 {
-	_D.resize(0);
-	_D_sort.resize(0);
+	_D_sort[n].resize(0);
 }
 
 //veq イコール判定機
 template<class GF>
-inline bool Decision<GF>::veceq(vector<unsigned char> f,vector<unsigned char> g)
+inline bool Decision<GF>::veceq(vector<unsigned char> f, vector<unsigned char> g)
 {
 	for (int i = 0; i < f.size(); i++)
 	{

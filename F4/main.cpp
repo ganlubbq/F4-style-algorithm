@@ -1,5 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <time.h>
+#include <fstream>
+#include <string>
+
 #include "F4.h"
 
 //多項式include
@@ -17,6 +21,12 @@ string GF31::_DX = "d";
 #include "Decision.h"
 #endif //_decision_
 
+//Poly関連初期化
+#ifdef D1
+Degree_table d(11);
+Degree_table Poly::_Degree = d;
+#endif //D1
+
 //Spoly include
 #include "Spoly.h"
 
@@ -26,13 +36,7 @@ string GF31::_DX = "d";
 //LB include
 #include "LB.h"
 
-static const int variables = 12;
-string filename = "GF31_12-0.txt";
-//Poly関連初期化
-#ifdef D1
-Degree_table d(variables);
-Degree_table Poly::_Degree = d;
-#endif //D1
+int ctoi(char *argv[]);
 
 int Poly::_Max_degree = 5;
 
@@ -41,19 +45,95 @@ Decision<GF31> dd;
 Spoly<GF31> ss;
 Red<GF31> rr;
 LB<GF31> ll;
-int F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Variables = variables;
-Decision<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Decision = dd;
-Spoly<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Spoly = ss;
-Red<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_Red = rr;
-LB<GF31> F4<GF31,Decision<GF31>,Spoly<GF31>, Red<GF31>, LB<GF31>>::_LB = ll;
+Decision<GF31> F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Decision = dd;
+Spoly<GF31> F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Spoly = ss;
+Red<GF31> F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Red = rr;
+LB<GF31> F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_LB = ll;
 int F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Parallel_div = 256;
+///int F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Seiki = 0;//0->normal 1->gauss 2->reduct 3 modify reduct
 #endif //_GF31_
 
-int main()
+//a.out inputfile variables resultfile seiki alltimefile
+int main(int argc, char *argv[])
 {
-	F4<GF31,Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename);
+	for (int i = 0; i < argc; i++) cout << argv[i] << endl;
+	int variables = ctoi(argv);
+	string filename = argv[1];
+	string writing_file = argv[3];
+	string all_file = argv[5];
+	int seiki = 10;
+	if (argv[4][0] == '0') seiki = 0;
+	else if (argv[4][0] == '1') seiki = 1;
+	else if (argv[4][0] == '2') seiki = 2;
+
+	cout << seiki << endl;
+
+
+	//int variables = 7;
+	//int seiki = 0;
+
+	/*int i = 0;
+	string filename = "GF31_" + std::to_string(variables) + "-" + std::to_string(i) + ".txt";
+	string writing_file = "GF31_" + std::to_string(variables) + "-" + std::to_string(i) + "-" + to_string(seiki) + "result.txt";*/
+
+	F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename, variables, writing_file, seiki, all_file);
+
 	f4.F4_style();
 
-	//system("pause");
 	return 0;
+}
+
+//くそ仕様注意　7~39以外バグる
+int ctoi(char *argv[]) {
+	switch (argv[2][0]) {
+	case '1':
+		switch (argv[2][1])
+		{
+		case '0': return 10;
+		case '1': return 11;
+		case '2': return 12;
+		case '3': return 13;
+		case '4': return 14;
+		case '5': return 15;
+		case '6': return 16;
+		case '7': return 17;
+		case '8': return 18;
+		case '9': return 19;
+		default: return 0;
+		}
+	case '2':
+		switch (argv[2][1])
+		{
+		case '0': return 20;
+		case '1': return 21;
+		case '2': return 22;
+		case '3': return 23;
+		case '4': return 24;
+		case '5': return 25;
+		case '6': return 26;
+		case '7': return 27;
+		case '8': return 28;
+		case '9': return 29;
+		default: return 0;
+		}
+	case '3':
+		switch (argv[2][1])
+		{
+		case '0': return 30;
+		case '1': return 31;
+		case '2': return 32;
+		case '3': return 33;
+		case '4': return 34;
+		case '5': return 35;
+		case '6': return 36;
+		case '7': return 37;
+		case '8': return 38;
+		case '9': return 39;
+		default: return 0;
+		}
+	case '7':return 7;
+	case '8':return 8;
+	case '9':return 9;
+	default: return 0;
+	}
 }

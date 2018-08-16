@@ -2,15 +2,15 @@
 #include "Poly.h"
 
 #include <iostream>
-	//windows
+//windows
 #ifdef _MSC_VER
 #include <intrin.h>
-	//linux
+//linux
 #else
 #include <x86intrin.h>
 #endif
 
-	using namespace std;
+using namespace std;
 
 // 256bitにucharが32個入る
 static const size_t single_size = 32;
@@ -122,7 +122,7 @@ public:
 
 	//operator 自分にしか作用しない　＋は書き換えるかも？
 	//void operator+(Poly_GF31_simd &poly);
-	void operator+(GF31 poly);
+	void operator+(GF31 &poly);
 	void operator*(unsigned char &n);
 	void operator*(vector<unsigned char> &monomial_deg);
 };
@@ -676,7 +676,7 @@ inline void GF31::LM_del() {
 	set_LMdeg();
 }
 
-inline void GF31::operator+(GF31 poly)
+inline void GF31::operator+(GF31 &poly)
 {
 	/*int max,before;
 	before = _Coeff.size();
@@ -684,6 +684,14 @@ inline void GF31::operator+(GF31 poly)
 	else max = _LMdeg_index + 1;
 	_Coeff.resize(max);
 	poly._Coeff.resize(max);*/
+
+	/*int temp_Div_single_size;
+	if (_Div_single_size < poly._Div_single_size)
+	{
+	temp_Div_single_size = poly._Div_single_size;
+	_Coeff.resize(poly._Coeff_size);
+	}
+	else temp_Div_single_size = _Div_single_size;*/
 
 	//AVX 専用の型にデータをロードする
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
@@ -704,7 +712,6 @@ inline void GF31::operator+(GF31 poly)
 	/*_Coeff.resize(before);
 	poly._Coeff.resize(before);*/
 }
-
 //coeff倍
 inline void GF31::operator*(unsigned char &n)
 {
@@ -801,7 +808,7 @@ inline void GF31::operator*(unsigned char &n)
 		mul30();
 		break;
 	default:
-		cout << "operator* error" << endl;
+		cout << "operator* error!!!!!" << endl;
 		system("pause");
 	}
 }
@@ -819,7 +826,7 @@ inline void GF31::operator*(vector<unsigned char> &monomial_deg)
 		_Coeff_size = _Coeff_size << 1;
 	}
 	_Coeff.resize(_Coeff_size);
-	_Div_single_size = _Coeff_size / single_size;
+	_Div_single_size = (_LMdeg_index + 1) / single_size;
 	if (_Max_degree < _Degree.calc_total_deg(_LMdeg))
 	{
 		_Max_degree = _Degree.calc_total_deg(_LMdeg);
@@ -828,7 +835,7 @@ inline void GF31::operator*(vector<unsigned char> &monomial_deg)
 
 	//スライド処理
 	vector<unsigned char> coeff_temp(_Coeff_size);
-	for (int i = 0; i < _Coeff_size; i++)
+	for (int i = 0; i <_LMdeg_index + 1; i++)
 	{
 		if (_Coeff[i] != 0)
 		{

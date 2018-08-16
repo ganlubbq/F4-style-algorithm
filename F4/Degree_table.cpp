@@ -1,14 +1,14 @@
 #include "Degree_table.h"
 //
 //degreeのdefaltは７
-Degree_table::Degree_table(int variables,int degree)
+Degree_table::Degree_table(int variables, int degree)
 {
 	_Variables = variables;
-	degree_gene(0,degree);
+	degree_gene(0, degree);
 }
 
 //minからmaxまでのdegree対応をDegree_tableに追加する Degreeの更新も兼ねる _Degree_first_indexも 最初に2次以上作る前提
-void Degree_table::degree_gene(int min,int max)
+void Degree_table::degree_gene(int min, int max)
 {
 	_Degree = max;
 	vector<unsigned char> deg(_Variables, 0);
@@ -19,7 +19,7 @@ void Degree_table::degree_gene(int min,int max)
 	{//const次数　全部0
 		_Degree_first_index.push_back(0);
 		_Degree_table.push_back(deg);
-	
+
 		//1次
 		for (int i = _Variables - 1; i >= 0; i--)
 		{
@@ -30,7 +30,7 @@ void Degree_table::degree_gene(int min,int max)
 		_Degree_first_index.push_back(1);
 		min = 2;
 	}
-	if(max >= 2){
+	if (max >= 2) {
 		degree_end_count = _Degree_table.size() - 1;
 		degree_end = _Degree_table.size() - 1;
 		degree_start = 1;

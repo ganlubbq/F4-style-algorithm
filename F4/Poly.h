@@ -23,12 +23,12 @@ public:
 	int _LMdeg_index;
 	vector<unsigned char> _Coeff;
 
-//main‚Å’è‹`
+	//main‚Å’è‹`
 	static int _Max_degree;
 #ifdef D1
 	static Degree_table _Degree;
 #endif //D1
-//
+	//
 
 	//operator
 	void* operator new(size_t size);

@@ -5,7 +5,7 @@
 using namespace std;
 
 
-/*index‚Ædegree‚Ì‘Î‰ž‚ð•Û‘¶ 
+/*index‚Ædegree‚Ì‘Î‰ž‚ð•Û‘¶
 Variables:•Ï”‚ÌŒÂ”
 Degree:‚±‚ÌŽŸ”‚Ü‚Å‚Ì‘Î‰ž‚ðŽ‚Â
 Degree_first_index:ŽŸ”‚ÌÅ‰‚Ìindex‚ð‚à‚Â 0->0,1->1,2->Variables + 1,...
@@ -20,8 +20,8 @@ public:
 	vector<int> _Degree_first_index;
 
 	//function
-	Degree_table(int variables,int degree = 7);
-	void degree_gene(int min,int max);
+	Degree_table(int variables, int degree = 7);
+	void degree_gene(int min, int max);
 	void update_degree(int degree);
 	void update_index(int index);
 	vector<unsigned char> index_to_degree(int index);

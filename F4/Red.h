@@ -13,14 +13,14 @@ public:
 	vector<GF> _Reds;
 
 	//function
-	void calc_red(vector<GF> &Spolies,vector<GF> &G);
+	void calc_red(vector<GF> &Spolies, vector<GF> &G);
 
 };
 
 template<class GF>
 void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 {
-	//spolyê≥ãKâªÇµÇƒÇÍÇŒÇ±Ç±ÇÕÇµÇÂÇÍÇÈ?
+	//spolyê≥ãKâªÇµÇƒÇÍÇŒÇ±Ç±ÇÕÇµÇÂÇÍÇÈ? ëSíPçÄéÆMÇ…in
 	vector<int> M_index;
 	for (int i = 0; i < Spolies.size(); i++)
 	{
@@ -37,7 +37,7 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 						break;
 					}
 				}
-				if(flag_wao) M_index.push_back(j);
+				if (flag_wao) M_index.push_back(j);
 			}
 		}
 	}
@@ -47,7 +47,7 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 	M_deg.resize(M_index);
 	for (int i = 0; i < M_deg.size(); i++)
 	{
-		M_deg[i] = _Gfr._Degree.index_to_degree(M_index[i]);
+	M_deg[i] = _Gfr._Degree.index_to_degree(M_index[i]);
 	}*/
 
 	//calc_red
@@ -56,15 +56,15 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 	{
 		flag = false;
 		int size_before = M_index.size();
-//#pragma omp parallel for reduction(||:flag)
-		for(int i = 0;i < size_before;i++)
+		//#pragma omp parallel for reduction(||:flag)
+		for (int i = 0; i < size_before; i++)
 		{
 			for (int j = 0; j < G.size(); j++)
 			{
 				if (_GFr._Degree.reducible(G[j]._LMdeg, _GFr._Degree.index_to_degree(M_index[i])))
 				{
 					flag = true;
-					vector<unsigned char> temp_deg = _GFr._Degree.vec_sub(_GFr._Degree.index_to_degree(M_index[i]),G[j]._LMdeg);
+					vector<unsigned char> temp_deg = _GFr._Degree.vec_sub(_GFr._Degree.index_to_degree(M_index[i]), G[j]._LMdeg);
 					GF temp_g = G[j];
 					temp_g * temp_deg;
 					_Reds.push_back(temp_g);
