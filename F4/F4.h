@@ -12,12 +12,16 @@ template <class GF, class Deci, class Spol, class Red, class LB>
 class F4
 {
 public:
-	F4(string filename, int variables, string writing_file, int seiki, string all);
+	F4(string filename, int variables, string writing_file, int seiki, string all,string gauss,string equation_file,string LB_file,string red_file,string LB_size);
 
 	//variables
 	string file_name;
 	string w_file_name;
 	string all_file_name;
+	string gauss_file_time;
+	string equation_file_size;
+	string LB_file_time;
+	string red_file_time;
 	int _Variables;
 	static Deci _Decision;
 	static Spol _Spoly;
@@ -39,13 +43,18 @@ public:
 };
 
 template <class GF, class Deci, class Spol, class Red, class LB>
-F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_file, int seikia, string all)
+F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_file, int seikia, string all,string gauss, string equation_file, string LB_file, string red_file,string LB_size)
 {
 	_Variables = variables;
 	_Seiki = seikia;
 	file_name = filename;
 	w_file_name = writing_file;
 	all_file_name = all;
+	gauss_file_time = gauss;
+	equation_file_size = equation_file;
+	LB_file_time = LB_file;
+	LB_file_size = LB_size;
+	red_file_time = red_file;
 	file_read();
 }
 
@@ -162,7 +171,10 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			//Ç±Ç±SpolyÇ§Ç‹Ç≠égÇ¶ÇŒè¡ÇπÇÈ?
 			_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // òAåã S = S or Red
 
+			auto LB_start = clock();
 			_LB.calc_LB(_Spoly._Spolies);
+			auto LB_end = clock();
+			LB_file_time << LB_end - LB_start << endl;
 
 			for (int i = 0; i < _Spoly._Spolies.size(); i++)
 			{
@@ -198,7 +210,14 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			if (count == _Variables) break;
 			if (_Seiki != 0)
 			{
-				if (_Seiki == 1) _LB.Gauss_rev(_Equations);
+				if (_Seiki == 1)
+				{
+					auto gauss_start = clock();
+					_LB.Gauss_rev(_Equations);
+					auto gauss_end = clock();
+					gauss_file_time  << gauss_end - gauss_start <<endl;
+					equation_file_size << equation.size() << endl;
+				}
 				else if (_Seiki == 2) seikika(_Equations);
 				else if (_Seiki == 3);
 
@@ -232,6 +251,9 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	writing_file << endl;
 	writing_file << end - start << endl;
 	writing_all << end - start << endl;
+	gauss_file_time << endl;
+	LB_file_time << endl;
+	equation_file_size << endl;
 	for (int i = 1; i < _Answer.size(); i++)
 	{
 		_Answer[i].set_LM();

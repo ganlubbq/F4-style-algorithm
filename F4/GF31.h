@@ -697,14 +697,14 @@ inline void GF31::operator+(GF31 &poly)
 	TYPE_AVX *vx = (TYPE_AVX *) &(_Coeff[0]);
 	TYPE_AVX *vy = (TYPE_AVX *) &(poly._Coeff[0]);
 
-	for (size_t i = 0; i < _Div_single_size; ++i) {
+	for (size_t i = 0; i < poly._Div_single_size; ++i) {
 		//vec += vec2;
 		vx[i] = ADD_AVX(vx[i], vy[i]);
 		MOD31(vx[i]);
 	}
 
 	// SIMDŒvŽZ‚ÅŽc‚Á‚½•”•ª
-	for (size_t i = _Div_single_size * single_size; i < _Coeff_size; ++i) {
+	for (size_t i = poly._Div_single_size * single_size; i < poly._Coeff_size; ++i) {
 		_Coeff[i] = (_Coeff[i] + poly._Coeff[i]) % 31;
 	}
 	set_LM();
