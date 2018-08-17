@@ -21,6 +21,7 @@ public:
 	string gauss_file_time;
 	string equation_file_size;
 	string LB_file_time;
+	string LB_file_size;
 	string red_file_time;
 	int _Variables;
 	static Deci _Decision;
@@ -128,6 +129,19 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
 	std::ofstream writing_file;
 	writing_file.open(w_file_name, std::ios::out);
+
+	std::ofstream LB_file_time_;
+	LB_file_time_.open(LB_file_time, std::ios::app);
+
+	std::ofstream gauss_file_time_;
+	gauss_file_time_.open(gauss_file_time, std::ios::app);
+
+	std::ofstream equation_file_size_;
+	equation_file_size_.open(equation_file_size, std::ios::app);
+
+	ofstream LB_file_size_;
+	LB_file_size_.open(LB_file_size,ios::app);
+
 	auto start = clock();
 
 	_Answer.resize(_Variables + 1);
@@ -171,10 +185,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			//Ç±Ç±SpolyÇ§Ç‹Ç≠égÇ¶ÇŒè¡ÇπÇÈ?
 			_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // òAåã S = S or Red
 
+			LB_file_size_ << _Spoly._Spolies.size() << endl;
 			auto LB_start = clock();
 			_LB.calc_LB(_Spoly._Spolies);
 			auto LB_end = clock();
-			LB_file_time << LB_end - LB_start << endl;
+			LB_file_time_ << LB_end - LB_start << endl;
 
 			for (int i = 0; i < _Spoly._Spolies.size(); i++)
 			{
@@ -215,8 +230,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					auto gauss_start = clock();
 					_LB.Gauss_rev(_Equations);
 					auto gauss_end = clock();
-					gauss_file_time  << gauss_end - gauss_start <<endl;
-					equation_file_size << equation.size() << endl;
+					gauss_file_time_  << gauss_end - gauss_start <<endl;
+					equation_file_size_ << _Equations.size() << endl;
 				}
 				else if (_Seiki == 2) seikika(_Equations);
 				else if (_Seiki == 3);
@@ -251,9 +266,9 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	writing_file << endl;
 	writing_file << end - start << endl;
 	writing_all << end - start << endl;
-	gauss_file_time << endl;
-	LB_file_time << endl;
-	equation_file_size << endl;
+	gauss_file_time_ << endl;
+	LB_file_time_ << endl;
+	equation_file_size_ << endl;
 	for (int i = 1; i < _Answer.size(); i++)
 	{
 		_Answer[i].set_LM();
@@ -267,6 +282,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 		}
 		writing_file << "]" << endl;
 	}
+	writing_file.close();
+	writing_all.close();
+	gauss_file_time_.close();
+	LB_file_time_.close();
+	LB_file_size_.close();
 }
 
 //LC = 1ëOíÒ
