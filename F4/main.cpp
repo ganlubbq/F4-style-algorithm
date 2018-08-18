@@ -23,7 +23,7 @@ string GF31::_DX = "d";
 
 //PolyŠÖ˜A‰Šú‰»
 #ifdef D1
-Degree_table d(12);
+Degree_table d(11);
 Degree_table Poly::_Degree = d;
 #endif //D1
 
