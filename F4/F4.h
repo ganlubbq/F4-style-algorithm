@@ -12,7 +12,7 @@ template <class GF, class Deci, class Spol, class Red, class LB>
 class F4
 {
 public:
-	F4(string filename, int variables, string writing_file, int seiki, string all,string gauss,string equation_file,string LB_file,string red_file,string LB_size);
+	F4(string filename, int variables, string writing_file, int seiki, string all,string gauss,string equation_file,string LB_file,string red_file);
 
 	//variables
 	string file_name;
@@ -20,9 +20,8 @@ public:
 	string all_file_name;
 	string gauss_file_time;
 	string equation_file_size;
-	string LB_file_time;
-	string LB_file_size;
-	string red_file_time;
+	string LB_file_time_size;
+	string red_file_time_size;
 	int _Variables;
 	static Deci _Decision;
 	static Spol _Spoly;
@@ -44,7 +43,7 @@ public:
 };
 
 template <class GF, class Deci, class Spol, class Red, class LB>
-F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_file, int seikia, string all,string gauss, string equation_file, string LB_file, string red_file,string LB_size)
+F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_file, int seikia, string all,string gauss, string equation_file, string LB_file, string red_file)
 {
 	_Variables = variables;
 	_Seiki = seikia;
@@ -53,9 +52,8 @@ F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_f
 	all_file_name = all;
 	gauss_file_time = gauss;
 	equation_file_size = equation_file;
-	LB_file_time = LB_file;
-	LB_file_size = LB_size;
-	red_file_time = red_file;
+	LB_file_time_size = LB_file;
+	red_file_time_size = red_file;
 	file_read();
 }
 
@@ -130,8 +128,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	std::ofstream writing_file;
 	writing_file.open(w_file_name, std::ios::out);
 
-	std::ofstream LB_file_time_;
-	LB_file_time_.open(LB_file_time, std::ios::app);
+	std::ofstream LB_file_time_size_;
+	LB_file_time_size_.open(LB_file_time_size, std::ios::app);
 
 	std::ofstream gauss_file_time_;
 	gauss_file_time_.open(gauss_file_time, std::ios::app);
@@ -139,13 +137,14 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	std::ofstream equation_file_size_;
 	equation_file_size_.open(equation_file_size, std::ios::app);
 
-	ofstream LB_file_size_;
-	LB_file_size_.open(LB_file_size,ios::app);
+	ofstream red_file_time_size_;
+	red_file_time_size_.open(red_file_time_size, ios::app);
 
 	auto start = clock();
 
 	_Answer.resize(_Variables + 1);
 	int count = 0;
+	int a_count = 0;
 	bool reset = false;
 
 	if (_Seiki != 0) _LB.Gauss_rev(_Equations);
@@ -156,15 +155,18 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	for (int p = 1; p < _Decision._D_sort.size(); p++)
 	{
 		reset = false;
-		cout << "p" << p << endl;
-		cout << "size" << _Decision._D_sort[p].size() << endl;
-
-		writing_file << "p" << p << endl;
-		writing_file << "size" << _Decision._D_sort[p].size() << endl;
+		
 		while (_Decision._D_sort[p].size() > 0)
 		{
-			writing_file << _Decision._D_sort[p].size() << endl;
-			cout << _Decision._D_sort[p].size() << endl;
+			//writing_file << _Decision._D_sort[p].size() << endl;
+			//cout << _Decision._D_sort[p].size() << endl;
+
+			cout << "p" << p << endl;
+			cout << "size" << _Decision._D_sort[p].size() << endl;
+
+			writing_file << "p" << p << endl;
+			writing_file << "size" << _Decision._D_sort[p].size() << endl;
+
 			_Spoly.spoly_erase();
 			vector<vector<int>> DD;
 			if (_Decision._D_sort[p].size() > _Parallel_div)
@@ -180,16 +182,20 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				_Decision.d_sort_erase(p);
 			}
 
+			auto red_start = clock();
 			_Red.calc_red(_Spoly._Spolies, _Equations);
+			auto red_end = clock();
+			red_file_time_size_ << _Spoly._Spolies.size() << "\t" << _Equations.size() << "\t";
+			red_file_time_size_ << red_end - red_start << endl;
 
 			//‚±‚±Spoly‚¤‚Ü‚­Žg‚¦‚ÎÁ‚¹‚é?
 			_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // ˜AŒ‹ S = S or Red
 
-			LB_file_size_ << _Spoly._Spolies.size() << endl;
+			a_count += 1;
 			auto LB_start = clock();
 			_LB.calc_LB(_Spoly._Spolies);
 			auto LB_end = clock();
-			LB_file_time_ << LB_end - LB_start << endl;
+			LB_file_time_size_ << _Spoly._Spolies.size()<< "\t" << LB_end - LB_start << endl;
 
 			for (int i = 0; i < _Spoly._Spolies.size(); i++)
 			{
@@ -266,8 +272,13 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	writing_file << endl;
 	writing_file << end - start << endl;
 	writing_all << end - start << endl;
+	for (int i = 0; i < a_count;i++)
+	{
+		writing_all << endl;
+	}
 	gauss_file_time_ << endl;
-	LB_file_time_ << endl;
+	LB_file_time_size_ << endl;
+	red_file_time_size_ << endl;
 	equation_file_size_ << endl;
 	for (int i = 1; i < _Answer.size(); i++)
 	{
@@ -285,8 +296,9 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	writing_file.close();
 	writing_all.close();
 	gauss_file_time_.close();
-	LB_file_time_.close();
-	LB_file_size_.close();
+	LB_file_time_size_.close();
+	equation_file_size_.close();
+	red_file_time_size_.close();
 }
 
 //LC = 1‘O’ñ

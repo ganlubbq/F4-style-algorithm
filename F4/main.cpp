@@ -53,10 +53,10 @@ int F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Parallel_div = 
 ///int F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Seiki = 0;//0->normal 1->gauss 2->reduct 3 modify reduct
 #endif //_GF31_
 
-//a.out inputfile variables resultfile seiki alltimefile gauss_time_file(•û’ö®‚ÌŒÂ”ŠÜ‚Ş) equation.size() LB_time_file red_time_file
+//a.out inputfile variables resultfile seiki alltimefile gauss_time_file(•û’ö®‚ÌŒÂ”ŠÜ‚Ş) equation.size() LB_time_size_file red_time_size_file 
 int main(int argc, char *argv[])
 {
-	for (int i = 0; i < argc; i++) cout << argv[i] << endl;
+	//for (int i = 0; i < argc; i++) cout << argv[i] << endl;
 	int variables = ctoi(argv);
 	string filename = argv[1];
 	string writing_file = argv[3];
@@ -65,9 +65,8 @@ int main(int argc, char *argv[])
 	string equation_file = argv[7];
 	string LB_file = argv[8];
 	string red_file = argv[9];
-	string LB_size = argv[10];
 
-	int seiki = 10;
+	int seiki;
 	if (argv[4][0] == '0') seiki = 0;
 	else if (argv[4][0] == '1') seiki = 1;
 	else if (argv[4][0] == '2') seiki = 2;
@@ -82,7 +81,7 @@ int main(int argc, char *argv[])
 	string filename = "GF31_" + std::to_string(variables) + "-" + std::to_string(i) + ".txt";
 	string writing_file = "GF31_" + std::to_string(variables) + "-" + std::to_string(i) + "-" + to_string(seiki) + "result.txt";*/
 
-	F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename, variables, writing_file, seiki, all_file,gauss_file,equation_file,LB_file,red_file,LB_size);
+	F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename, variables, writing_file, seiki, all_file,gauss_file,equation_file,LB_file,red_file);
 
 	f4.F4_style();
 
