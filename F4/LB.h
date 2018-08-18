@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<omp.h>
+#include <time.h>
 
 template<class GF>
 class LB
