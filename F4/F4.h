@@ -12,14 +12,13 @@ template <class GF, class Deci, class Spol, class Red, class LB>
 class F4
 {
 public:
-	F4(string filename, int variables, string writing_file, int seiki, string all,string gauss,string equation_file,string LB_file,string red_file);
+	F4(string filename, int variables, string writing_file, int seiki, string all,string gauss,string LB_file,string red_file);
 
 	//variables
 	string file_name;
 	string w_file_name;
 	string all_file_name;
 	string gauss_file_time;
-	string equation_file_size;
 	string LB_file_time_size;
 	string red_file_time_size;
 	int _Variables;
@@ -43,7 +42,7 @@ public:
 };
 
 template <class GF, class Deci, class Spol, class Red, class LB>
-F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_file, int seikia, string all,string gauss, string equation_file, string LB_file, string red_file)
+F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_file, int seikia, string all,string gauss, string LB_file, string red_file)
 {
 	_Variables = variables;
 	_Seiki = seikia;
@@ -51,7 +50,6 @@ F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_f
 	w_file_name = writing_file;
 	all_file_name = all;
 	gauss_file_time = gauss;
-	equation_file_size = equation_file;
 	LB_file_time_size = LB_file;
 	red_file_time_size = red_file;
 	file_read();
@@ -133,9 +131,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 	std::ofstream gauss_file_time_;
 	gauss_file_time_.open(gauss_file_time, std::ios::app);
-
-	std::ofstream equation_file_size_;
-	equation_file_size_.open(equation_file_size, std::ios::app);
 
 	ofstream red_file_time_size_;
 	red_file_time_size_.open(red_file_time_size, ios::app);
@@ -236,8 +231,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					auto gauss_start = clock();
 					_LB.Gauss_rev(_Equations);
 					auto gauss_end = clock();
-					gauss_file_time_  << gauss_end - gauss_start <<endl;
-					equation_file_size_ << _Equations.size() << endl;
+					gauss_file_time_  << _Equations.size() << "\t" << gauss_end - gauss_start << endl;
 				}
 				else if (_Seiki == 2) seikika(_Equations);
 				else if (_Seiki == 3);
@@ -272,14 +266,13 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	writing_file << endl;
 	writing_file << end - start << endl;
 	writing_all << end - start << endl;
-	for (int i = 0; i < a_count;i++)
+	for (int i = 0; i <= a_count;i++)
 	{
 		writing_all << endl;
 	}
-	gauss_file_time_ << endl;
-	LB_file_time_size_ << endl;
-	red_file_time_size_ << endl;
-	equation_file_size_ << endl;
+	gauss_file_time_ << endl << endl;
+	LB_file_time_size_ << endl << endl;
+	red_file_time_size_ << endl << endl;
 	for (int i = 1; i < _Answer.size(); i++)
 	{
 		_Answer[i].set_LM();
@@ -297,7 +290,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	writing_all.close();
 	gauss_file_time_.close();
 	LB_file_time_size_.close();
-	equation_file_size_.close();
 	red_file_time_size_.close();
 }
 
