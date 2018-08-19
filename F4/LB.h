@@ -114,6 +114,5 @@ vector<int> LB<GF>::Gauss_rev_Eq(vector<GF> &Eq)
 	std::sort(result.begin(), result.end());
 	//d•¡íœ
 	result.erase(std::unique(result.begin(), result.end()), result.end());
-
 	return result;
 }

@@ -811,6 +811,7 @@ inline void GF31::operator*(unsigned char &n)
 		cout << "operator* error!!!!!" << endl;
 		system("pause");
 	}
+	set_LM();
 }
 
 //monomialの係数は1が前提　Coeffのスライドをする LMDeg,LMdeg_index,Coeff_size,div_single_size,Max_degreeを更新

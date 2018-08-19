@@ -175,7 +175,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 			LB_file_time_size_ << p << "\t" << _Decision._D_sort[p].size() << "\t";
 
-			de_i.resize(0);
 			_Spoly.spoly_erase();
 			vector<vector<int>> DD;
 			if (_Decision._D_sort[p].size() > _Parallel_div)
@@ -284,6 +283,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				{
 					_Decision.Gebauer_Moller_num(_Equations, *itr);
 				}
+				
+				de_i.resize(0);
 			}
 			_Decision.Buchberger(_Equations);
 		}
