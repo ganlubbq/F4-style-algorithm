@@ -15,6 +15,7 @@ public:
 	void decision(vector<GF> &G);
 	void Gebauer_Moller(vector<GF> &G);
 	void Gebauer_Moller_mono(vector<GF> &G);
+	void Gebauer_Moller_num(vector<GF> &G,int num);
 	void Buchberger(vector<GF> &G);
 	//void sort_D(vector<GF> &G);
 	//void d_erase();
@@ -116,6 +117,173 @@ inline void Decision<GF>::Gebauer_Moller(vector<GF> &G)
 					}
 					k--;
 				}
+			}
+		}
+	}
+}
+
+//numの場所に対して他全員でチェック　 Gebauer_Moller_monoの上位互換
+template<class GF>
+inline void Decision<GF>::Gebauer_Moller_num(vector<GF> &G, int num)
+{
+	//i < num = j
+	for (int i = 0; i < num; i++)
+	{
+		int j = num;
+		//F
+		int flag = 0;
+		int k = 0;
+		vector<unsigned char> T_ij = _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg);
+		while (k < i)
+		{
+			if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+			{
+				flag++;
+				int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+				if (_GFd._Max_degree < temp_T_ij_deg)
+				{
+					_GFd._Max_degree = temp_T_ij_deg;
+					_GFd._Degree.update_degree(temp_T_ij_deg);
+					_D_sort.resize(_GFd._Max_degree + 1);
+				}
+				_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+				break;
+			}
+			k++;
+		}
+
+		//M
+		if (flag == 0)
+		{
+			int k = 0;
+			while (k < j)
+			{
+				if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+				{
+					if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+					{
+						flag++;
+						int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+						if (_GFd._Max_degree < temp_T_ij_deg)
+						{
+							_GFd._Max_degree = temp_T_ij_deg;
+							_GFd._Degree.update_degree(temp_T_ij_deg);
+							_D_sort.resize(_GFd._Max_degree + 1);
+						}
+						_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+						break;
+					}
+				}
+				k++;
+			}
+		}
+
+		//B
+		if (flag == 0)
+		{
+			int k = G.size() - 1;
+			while (k > j)
+			{
+				if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+				{
+					if (!veceq(_GFd._Degree.LCM(G[i]._LMdeg, G[k]._LMdeg), T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+						{
+							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+							if (_GFd._Max_degree < temp_T_ij_deg)
+							{
+								_GFd._Max_degree = temp_T_ij_deg;
+								_GFd._Degree.update_degree(temp_T_ij_deg);
+								_D_sort.resize(_GFd._Max_degree + 1);
+							}
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+							break;
+						}
+					}
+				}
+				k--;
+			}
+		}
+	}
+
+	//i = num < j
+	int i = num;
+	for (int j = num + 1; j < G.size(); j++)
+	{
+		//F
+		int flag = 0;
+		int k = 0;
+		vector<unsigned char> T_ij = _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg);
+		while (k < i)
+		{
+			if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+			{
+				flag++;
+				int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+				if (_GFd._Max_degree < temp_T_ij_deg)
+				{
+					_GFd._Max_degree = temp_T_ij_deg;
+					_GFd._Degree.update_degree(temp_T_ij_deg);
+					_D_sort.resize(_GFd._Max_degree + 1);
+				}
+				_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+				break;
+			}
+			k++;
+		}
+
+		//M
+		if (flag == 0)
+		{
+			int k = 0;
+			while (k < j)
+			{
+				if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+				{
+					if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+					{
+						flag++;
+						int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+						if (_GFd._Max_degree < temp_T_ij_deg)
+						{
+							_GFd._Max_degree = temp_T_ij_deg;
+							_GFd._Degree.update_degree(temp_T_ij_deg);
+							_D_sort.resize(_GFd._Max_degree + 1);
+						}
+						_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+						break;
+					}
+				}
+				k++;
+			}
+		}
+
+		//B
+		if (flag == 0)
+		{
+			int k = G.size() - 1;
+			while (k > j)
+			{
+				if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+				{
+					if (!veceq(_GFd._Degree.LCM(G[i]._LMdeg, G[k]._LMdeg), T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+						{
+							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+							if (_GFd._Max_degree < temp_T_ij_deg)
+							{
+								_GFd._Max_degree = temp_T_ij_deg;
+								_GFd._Degree.update_degree(temp_T_ij_deg);
+								_D_sort.resize(_GFd._Max_degree + 1);
+							}
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+							break;
+						}
+					}
+				}
+				k--;
 			}
 		}
 	}

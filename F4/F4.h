@@ -32,6 +32,7 @@ public:
 	GF _GFf;
 	vector<GF> _Answer;
 	vector<GF> _Equations;
+	vector<int> de_i;//gauss掃き出しに必要なindex
 	//clock_t all_time;
 
 	//function
@@ -189,20 +190,21 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				_Decision.d_sort_erase(p);
 			}
 
+			red_file_time_size_ << _Spoly._Spolies.size() << "\t" << _Equations.size() << "\t";
 			auto red_start = clock();
 			_Red.calc_red(_Spoly._Spolies, _Equations);
 			auto red_end = clock();
-			red_file_time_size_ << _Spoly._Spolies.size() << "\t" << _Equations.size() << "\t";
 			red_file_time_size_ << red_end - red_start << endl;
 
 			//ここSpolyうまく使えば消せる?
 			_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // 連結 S = S or Red
 
 			a_count += 1;
+			LB_file_time_size_ << _Spoly._Spolies.size() << "\t";
 			auto LB_start = clock();
 			_LB.calc_LB(_Spoly._Spolies);
 			auto LB_end = clock();
-			LB_file_time_size_ << _Spoly._Spolies.size()<< "\t" << LB_end - LB_start << endl;
+			LB_file_time_size_ << LB_end - LB_start << endl;
 
 			for (int i = 0; i < _Spoly._Spolies.size(); i++)
 			{
@@ -229,7 +231,14 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 							count++;
 							if (count == _Variables) break;
 						}
-						_Decision.Gebauer_Moller_mono(_Equations);
+						if (_Seiki == 0)
+						{
+							_Decision.Gebauer_Moller_mono(_Equations);
+						}
+						else if (_Seiki == 1)
+						{
+							de_i.push_back(_Equations.size() - 1);
+						}
 						//}
 					}
 				}
@@ -240,10 +249,15 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			{
 				if (_Seiki == 1)
 				{
+					vector<int> de_temp;
 					auto gauss_start = clock();
-					_LB.Gauss_rev(_Equations);
+					de_temp = _LB.Gauss_rev_Eq(_Equations);
 					auto gauss_end = clock();
 					gauss_file_time_  << _Equations.size() << "\t" << gauss_end - gauss_start << endl;
+					for (int sss = 0; sss < de_temp.size(); sss++)
+					{
+						de_i.push_back(de_temp[sss]);
+					}
 				}
 				else if (_Seiki == 2) seikika(_Equations);
 				else if (_Seiki == 3);
@@ -263,6 +277,13 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				if (count == _Variables) break;
 				//_Decision.Gebauer_Moller(_Equations);
 				reset = true;
+			}
+			if (_Seiki == 1)
+			{
+				for (auto itr = de_i.begin(); itr != de_i.end(); itr++)
+				{
+					_Decision.Gebauer_Moller_num(_Equations, *itr);
+				}
 			}
 			_Decision.Buchberger(_Equations);
 		}
