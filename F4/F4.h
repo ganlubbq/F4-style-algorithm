@@ -150,13 +150,29 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	int a_count = 0;
 	bool reset = false;
 
+	cout << "init" << endl;
+	for (int x = 0; x < _Equations.size(); x++)
+	{
+		printvec(_Equations[x]._Coeff);
+	}
+	cout << endl;
+
+
 	if (_Seiki != 0) _LB.Gauss_rev(_Equations);
+	//reverse(_Equations.begin(), _Equations.end());
 
 	auto decision_start = clock();
 	//SpolyçiÇËçûÇ› init
 	_Decision.decision(_Equations);
 	auto decision_end =  clock();
 	decision_file_time_size_ << _Equations.size() << "\t" << decision_end - decision_start << endl;
+
+	cout << "init" << endl;
+	for (int x = 0; x < _Equations.size(); x++)
+	{
+		printvec(_Equations[x]._Coeff);
+	}
+	cout << endl;
 
 	for (int p = 1; p < _Decision._D_sort.size(); p++)
 	{
@@ -176,7 +192,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			LB_file_time_size_ << p << "\t" << _Decision._D_sort[p].size() << "\t";
 
 			_Spoly.spoly_erase();
-			/*vector<vector<int>> DD;
+			vector<vector<int>> DD;
 			if (_Decision._D_sort[p].size() > _Parallel_div)
 			{
 				//DD.resize(_Parallel_div);
@@ -185,12 +201,27 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				_Spoly.calc_Spoly(_Equations, DD);
 			}
 			else
-			{*/
+			{
+				cout << "D" << endl;
+				for (int x = 0; x < _Decision._D_sort[p].size(); x++)
+				{
+					printvec(_Decision._D_sort[p][x]);
+				}
+				cout << endl;
 				_Spoly.calc_Spoly(_Equations, _Decision._D_sort[p]);
 				_Decision.d_sort_erase(p);
-			//}
+			}
 
 			red_file_time_size_ << _Spoly._Spolies.size() << "\t" << _Equations.size() << "\t";
+			
+
+			cout << "Sp" << endl;
+			for (int x = 0; x < _Spoly._Spolies.size(); x++)
+			{
+				printvec(_Spoly._Spolies[x]._Coeff);
+			}
+			cout << endl;
+
 			auto red_start = clock();
 			_Red.calc_red(_Spoly._Spolies, _Equations);
 			auto red_end = clock();
@@ -199,12 +230,26 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			//Ç±Ç±SpolyÇ§Ç‹Ç≠égÇ¶ÇŒè¡ÇπÇÈ?
 			_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // òAåã S = S or Red
 
+			cout << "Sp or Red" << endl;
+			for (int x = 0; x < _Spoly._Spolies.size(); x++)
+			{
+				printvec(_Spoly._Spolies[x]._Coeff);
+			}
+			cout << endl;
+
 			a_count += 1;
 			LB_file_time_size_ << _Spoly._Spolies.size() << "\t";
 			auto LB_start = clock();
 			_LB.calc_LB(_Spoly._Spolies);
 			auto LB_end = clock();
 			LB_file_time_size_ << LB_end - LB_start << endl;
+
+			cout << "LB" << endl;
+			for (int x = 0; x < _Spoly._Spolies.size(); x++)
+			{
+				printvec(_Spoly._Spolies[x]._Coeff);
+			}
+			cout << endl;
 
 			for (int i = 0; i < _Spoly._Spolies.size(); i++)
 			{
@@ -225,12 +270,12 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						_Equations.push_back(_Spoly._Spolies[i]);
 						//if (_Seiki == false)
 						//{
-						/*if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
+						if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
 						{
 							_Answer[_Spoly._Spolies[i]._LMdeg_index] = _Spoly._Spolies[i];
 							count++;
 							if (count == _Variables) break;
-						}*/
+						}
 						if (_Seiki == 0 )
 						{
 							_Decision.Gebauer_Moller_mono(_Equations);
@@ -242,9 +287,9 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						//}
 					}
 				}
-				//if (count == _Variables) break;
+				if (count == _Variables) break;
 			}
-		//	if (count == _Variables) break;
+			if (count == _Variables) break;
 			if (_Seiki != 0)
 			{
 				if (_Seiki == 1)
@@ -273,7 +318,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				}
 				else if (_Seiki == 3);
 
-				/*for (int n = 0; n < _Equations.size(); n++)
+				for (int n = 0; n < _Equations.size(); n++)
 				{
 					if (_Equations[n]._LMdeg_index != -1)
 					{
@@ -284,8 +329,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 							if (count == _Variables) break;
 						}
 					}
-				}*/
-			//	if (count == _Variables) break;
+				}
+				if (count == _Variables) break;
 				reset = true;
 			}
 			if (_Seiki != 0)
@@ -297,10 +342,18 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				
 				de_i.resize(0);
 			}
+			cout << _Decision._D_sort[p].size() << endl;
 			_Decision.Buchberger(_Equations);
+			cout << _Decision._D_sort[p].size() << endl;
+			cout << "init" << endl;
+			for (int x = 0; x < _Equations.size(); x++)
+			{
+				printvec(_Equations[x]._Coeff);
+			}
+			cout << endl;
 		}
 		if (reset == true) p = 1;
-		//if (count == _Variables) break;
+		if (count == _Variables) break;
 	}
 
 	auto end = clock();

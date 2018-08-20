@@ -23,7 +23,7 @@ string GF31::_DX = "d";
 
 //Poly関連初期化
 #ifdef D1
-Degree_table d(11);
+Degree_table d(2);
 Degree_table Poly::_Degree = d;
 #endif //D1
 
@@ -90,6 +90,7 @@ int main(int argc, char *argv[])
 
 //くそ仕様注意　7~39以外バグる
 int ctoi(char *argv[]) {
+	return 2;
 	switch (argv[2][0]) {
 	case '1':
 		switch (argv[2][1])

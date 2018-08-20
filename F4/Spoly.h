@@ -31,11 +31,15 @@ inline void Spoly<GF>::calc_Spoly(vector<GF> &G, vector<vector<int>> &D)
 
 		GF temp_G = G[D[i][0]];
 		temp_G * _GFs._Inverse[G[D[i][0]]._LM];
+		cout <<(int) G[D[i][0]]._LM << endl;
+		cout << (int)_GFs._Inverse[G[D[i][0]]._LM] << endl;
 		temp_G * temp;
 		_Spolies[2 * i] = temp_G;
 
-		temp_G = G[D[i][0]];
+		temp_G = G[D[i][1]];
 		temp = _GFs._Degree.vec_sub(lcm_deg, G[D[i][1]]._LMdeg);
+		cout << (int)G[D[i][1]]._LM << endl;
+		cout << (int)_GFs._Inverse[G[D[i][1]]._LM] << endl;
 		temp_G * _GFs._Inverse[G[D[i][1]]._LM];
 		temp_G * temp;
 		_Spolies[2 * i + 1] = temp_G;

@@ -362,8 +362,12 @@ inline void Decision<GF>::Buchberger(vector<GF> &G)
 				temp.push_back(_D_sort[j][i]);
 			}
 		}
-		_D_sort[j].resize(temp.size());
-		_D_sort[j] = temp;
+		if (temp.size() > 0)
+		{
+			_D_sort[j].resize(temp.size());
+			_D_sort[j] = temp;
+		}
+		temp.resize(0);
 	}
 }
 
