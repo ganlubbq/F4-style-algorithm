@@ -176,7 +176,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			LB_file_time_size_ << p << "\t" << _Decision._D_sort[p].size() << "\t";
 
 			_Spoly.spoly_erase();
-			vector<vector<int>> DD;
+			/*vector<vector<int>> DD;
 			if (_Decision._D_sort[p].size() > _Parallel_div)
 			{
 				//DD.resize(_Parallel_div);
@@ -185,10 +185,10 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				_Spoly.calc_Spoly(_Equations, DD);
 			}
 			else
-			{
+			{*/
 				_Spoly.calc_Spoly(_Equations, _Decision._D_sort[p]);
 				_Decision.d_sort_erase(p);
-			}
+			//}
 
 			red_file_time_size_ << _Spoly._Spolies.size() << "\t" << _Equations.size() << "\t";
 			auto red_start = clock();
@@ -225,26 +225,26 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						_Equations.push_back(_Spoly._Spolies[i]);
 						//if (_Seiki == false)
 						//{
-						if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
+						/*if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
 						{
 							_Answer[_Spoly._Spolies[i]._LMdeg_index] = _Spoly._Spolies[i];
 							count++;
 							if (count == _Variables) break;
-						}
-						if (_Seiki == 0)
+						}*/
+						if (_Seiki == 0 )
 						{
 							_Decision.Gebauer_Moller_mono(_Equations);
 						}
-						else if (_Seiki != 1)
+						else if (_Seiki != 0)
 						{
 							de_i.push_back(_Equations.size() - 1);
 						}
 						//}
 					}
 				}
-				if (count == _Variables) break;
+				//if (count == _Variables) break;
 			}
-			if (count == _Variables) break;
+		//	if (count == _Variables) break;
 			if (_Seiki != 0)
 			{
 				if (_Seiki == 1)
@@ -263,7 +263,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				{
 					vector<int> de_temp;
 					auto gauss_start = clock();
-					de_temp =  seikika(_Equations);
+					de_temp = seikika(_Equations);
 					auto gauss_end = clock();
 					gauss_file_time_ << _Equations.size() << "\t" << gauss_end - gauss_start << endl;
 					for (int sss = 0; sss < de_temp.size(); sss++)
@@ -273,7 +273,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				}
 				else if (_Seiki == 3);
 
-				for (int n = 0; n < _Equations.size(); n++)
+				/*for (int n = 0; n < _Equations.size(); n++)
 				{
 					if (_Equations[n]._LMdeg_index != -1)
 					{
@@ -284,11 +284,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 							if (count == _Variables) break;
 						}
 					}
-				}
-				if (count == _Variables) break;
+				}*/
+			//	if (count == _Variables) break;
 				reset = true;
 			}
-			if (_Seiki != 1)
+			if (_Seiki != 0)
 			{
 				for (auto itr = de_i.begin(); itr != de_i.end(); itr++)
 				{
@@ -300,7 +300,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			_Decision.Buchberger(_Equations);
 		}
 		if (reset == true) p = 1;
-		if (count == _Variables) break;
+		//if (count == _Variables) break;
 	}
 
 	auto end = clock();
