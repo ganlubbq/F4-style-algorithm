@@ -41,7 +41,7 @@ public:
 	void file_read();
 	int var_deg_comb(int n, int r);
 	void F4_style();
-	void seikika(vector<GF> &G);
+	vector<int> seikika(vector<GF> &G);
 };
 
 template <class GF, class Deci, class Spol, class Red, class LB>
@@ -235,7 +235,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						{
 							_Decision.Gebauer_Moller_mono(_Equations);
 						}
-						else if (_Seiki == 1)
+						else if (_Seiki != 1)
 						{
 							de_i.push_back(_Equations.size() - 1);
 						}
@@ -259,7 +259,18 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						de_i.push_back(de_temp[sss]);
 					}
 				}
-				else if (_Seiki == 2) seikika(_Equations);
+				else if (_Seiki == 2)
+				{
+					vector<int> de_temp;
+					auto gauss_start = clock();
+					de_temp =  seikika(_Equations);
+					auto gauss_end = clock();
+					gauss_file_time_ << _Equations.size() << "\t" << gauss_end - gauss_start << endl;
+					for (int sss = 0; sss < de_temp.size(); sss++)
+					{
+						de_i.push_back(de_temp[sss]);
+					}
+				}
 				else if (_Seiki == 3);
 
 				for (int n = 0; n < _Equations.size(); n++)
@@ -277,7 +288,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				if (count == _Variables) break;
 				reset = true;
 			}
-			if (_Seiki == 1)
+			if (_Seiki != 1)
 			{
 				for (auto itr = de_i.begin(); itr != de_i.end(); itr++)
 				{
@@ -331,8 +342,9 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 //LC = 1‘O’ñ
 template <class GF, class Deci, class Spol, class Red, class LB>
-inline void F4<GF, Deci, Spol, Red, LB>::seikika(vector<GF> &G)
+inline vector<int> F4<GF, Deci, Spol, Red, LB>::seikika(vector<GF> &G)
 {
+	vector<int> result;
 	bool flag = true;
 	while (flag)
 	{
@@ -374,7 +386,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::seikika(vector<GF> &G)
 								G[j]._Div_single_size = G[j]._Coeff_size / single_size;
 							}
 							G[j] + temp_i;
-
+							result.push_back(j);
 						}
 					}
 				}
@@ -384,4 +396,5 @@ inline void F4<GF, Deci, Spol, Red, LB>::seikika(vector<GF> &G)
 			}
 		}
 	}
+	return result;
 }
