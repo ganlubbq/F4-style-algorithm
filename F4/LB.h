@@ -16,6 +16,7 @@ public:
 	//function
 	void calc_LB(vector<GF> &Sp_red);
 	void Gauss_rev(vector<GF> &Sp_red);
+	void Gauss_rev_fin(vector<GF> &Sp_red);
 	vector<int> Gauss_rev_Eq(vector<GF> &Eq);
 };
 
@@ -54,8 +55,50 @@ void LB<GF>::Gauss_rev(vector<GF> &Sp_red)
 			Sp_red[i] * _GFl._Inverse[Sp_red[i]._LM];
 		}
 		int index = Sp_red[i]._LMdeg_index;
-#pragma omp parallel for
+//#pragma omp parallel for
 		for (int j = 0; j < Sp_red.size(); j++)
+		{
+			if (i == j) continue;
+			if (Sp_red[j]._Coeff[index] != 0)
+			{
+				GF temp = Sp_red[i];
+				temp * (_GFl._Add_inverse[Sp_red[j]._Coeff[index]]);
+				Sp_red[j] + temp;
+			}
+		}
+	}
+}
+
+template <class GF>
+void LB<GF>::Gauss_rev_fin(vector<GF> &Sp_red)
+{
+	//vector sizeí≤êÆ
+	int max_length = 0;
+	for (int i = 1; i < Sp_red.size(); i++)
+	{
+		if (max_length < Sp_red[i]._LMdeg_index + 1) max_length = Sp_red[i]._LMdeg_index + 1;
+	}
+	for (int i = 1; i < Sp_red.size(); i++)
+	{
+		Sp_red[i]._Coeff.resize(max_length);
+		Sp_red[i]._Coeff_size = max_length;
+		Sp_red[i]._Div_single_size = Sp_red[i]._Coeff_size / single_size;
+	}
+
+	//cout << max_length << endl;
+
+	for (int i = 1; i < Sp_red.size(); i++)
+	{
+		//0ëΩçÄéÆ
+		if (Sp_red[i]._LMdeg_index == -1) continue;
+		//LC = 1Ç…
+		if (Sp_red[i]._LM != 1)
+		{
+			Sp_red[i] * _GFl._Inverse[Sp_red[i]._LM];
+		}
+		int index = Sp_red[i]._LMdeg_index;
+		//#pragma omp parallel for
+		for (int j = 1; j < Sp_red.size(); j++)
 		{
 			if (i == j) continue;
 			if (Sp_red[j]._Coeff[index] != 0)
@@ -91,16 +134,23 @@ vector<int> LB<GF>::Gauss_rev_Eq(vector<GF> &Eq)
 	for (int i = 0; i < Eq.size(); i++)
 	{
 		//0ëΩçÄéÆ
-		if (Eq[i]._LMdeg_index == -1) continue;
+		if (Eq[i]._LMdeg_index == -1)
+		{
+			continue;
+		}
 		//LC = 1Ç…
 		if (Eq[i]._LM != 1)
 		{
 			Eq[i] * _GFl._Inverse[Eq[i]._LM];
 		}
 		int index = Eq[i]._LMdeg_index;
-#pragma omp parallel for
+//#pragma omp parallel for
 		for (int j = 0; j < Eq.size(); j++)
 		{
+			if (Eq[i]._LMdeg_index == -1)
+			{
+				continue;
+			}
 			if (i == j) continue;
 			if (Eq[j]._Coeff[index] != 0)
 			{
