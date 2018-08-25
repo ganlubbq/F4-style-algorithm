@@ -23,7 +23,7 @@ string GF31::_DX = "d";
 
 //PolyŠÖ˜A‰Šú‰»
 #ifdef D1
-Degree_table d(12);
+Degree_table d(10);
 Degree_table Poly::_Degree = d;
 #endif //D1
 
@@ -57,15 +57,16 @@ int F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Parallel_div = 
 int main(int argc, char *argv[])
 {
 	//for (int i = 0; i < argc; i++) cout << argv[i] << endl;
+	system("pause");
 	int variables = ctoi(argv);
 	string filename = argv[1];
+
 	string writing_file = argv[3];
 	string all_file = argv[5];
 	string gauss_file = argv[6];
 	string LB_file = argv[7];
 	string red_file = argv[8];
 	string decision_file = argv[9];
-
 	int seiki;
 	if (argv[4][0] == '0') seiki = 0;
 	else if (argv[4][0] == '1') seiki = 1;
@@ -73,18 +74,10 @@ int main(int argc, char *argv[])
 
 	cout << seiki << endl;
 
-
-	//int variables = 7;
-	//int seiki = 0;
-
-	/*int i = 0;
-	string filename = "GF31_" + std::to_string(variables) + "-" + std::to_string(i) + ".txt";
-	string writing_file = "GF31_" + std::to_string(variables) + "-" + std::to_string(i) + "-" + to_string(seiki) + "result.txt";*/
-
 	F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename, variables, writing_file, seiki, all_file,gauss_file,LB_file,red_file,decision_file);
 
 	f4.F4_style();
-
+	system("pause");
 	return 0;
 }
 

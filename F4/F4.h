@@ -4,6 +4,7 @@
 #include <string>
 #include<vector>
 #include<time.h>
+#include "memory.h"
 
 using namespace std;
 
@@ -29,6 +30,7 @@ public:
 	static LB _LB;
 	static int _Parallel_div;
 	int _Seiki;
+	int count;
 	GF _GFf;
 	vector<GF> _Answer;
 	vector<GF> _Equations;
@@ -56,6 +58,7 @@ F4<GF, Deci, Spol, Red, LB>::F4(string filename, int variables, string writing_f
 	decision_file_time_size = decision_file;
 	LB_file_time_size = LB_file;
 	red_file_time_size = red_file;
+
 	file_read();
 }
 
@@ -128,6 +131,7 @@ template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
 //#define DEBUG
+#define ONE_ERASE
 	std::ofstream writing_file;
 	writing_file.open(w_file_name, std::ios::out);
 
@@ -147,7 +151,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	//all_time = 0;
 
 	_Answer.resize(_Variables + 1);
-	int count = 0;
+	count = 0;
 	int a_count = 0;
 	bool reset = false;
 
@@ -162,7 +166,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 
 	if (_Seiki != 0) _LB.Gauss_rev(_Equations);
-	//reverse(_Equations.begin(), _Equations.end());
 
 	auto decision_start = clock();
 	//SpolyçiÇËçûÇ› init
@@ -199,7 +202,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			LB_file_time_size_ << p << "\t" << _Decision._D_sort[p].size() << "\t";
 
 			_Spoly.spoly_erase();
-			vector<vector<int>> DD;
+			/*vector<vector<int>> DD;
 			if (_Decision._D_sort[p].size() > _Parallel_div)
 			{
 				//DD.resize(_Parallel_div);
@@ -214,9 +217,9 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				cout << endl;
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, DD);
-			}
-			else
-			{
+			}*/
+			/*else
+			{*/
 #ifdef DEBUG
 				cout << "D" << endl;
 				for (int x = 0; x < _Decision._D_sort[p].size(); x++)
@@ -227,7 +230,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, _Decision._D_sort[p]);
 				_Decision.d_sort_erase(p);
-			}
+			//}
 
 			red_file_time_size_ << _Spoly._Spolies.size() << "\t" << _Equations.size() << "\t";
 			
@@ -292,6 +295,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						_Equations.push_back(_Spoly._Spolies[i]);
 						//if (_Seiki == false)
 						//{
+#ifdef ONE_ERASE
 						if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
 						{
 							if (_Answer[_Spoly._Spolies[i]._LMdeg_index]._Coeff.size() == 0)
@@ -301,6 +305,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 							}
 							if (count == _Variables) break;
 						}
+#endif //ONE_ERASE
 						if (_Seiki == 0 )
 						{
 							_Decision.Gebauer_Moller_mono(_Equations);
@@ -342,7 +347,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						de_i.push_back(de_temp[sss]);
 					}
 				}
-
+#ifdef ONE_ERASE
 				for (int n = 0; n < _Equations.size(); n++)
 				{
 					if (_Equations[n]._LMdeg_index != -1)
@@ -362,6 +367,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					}
 				}
 				if (count == _Variables) break;
+#endif //ONE_ERASE
 				reset = true;
 			}
 			if (_Seiki != 0)
@@ -403,14 +409,25 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	decision_file_time_size_ << endl << endl;
 	LB_file_time_size_ << endl << endl;
 	red_file_time_size_ << endl << endl;
+
+	cout << "#" << endl;
+	for (int i = 1; i < _Answer.size(); i++)
+	{
+		_Answer[i]._Coeff.resize(_Variables + 1);
+
+		cout << "[";
+		for (int j = 0; j < _Answer[i]._Coeff.size(); j++)
+		{
+			cout << (int)_Answer[i]._Coeff[j] << " ";
+		}
+		cout << "]" << endl;
+	}
+#ifdef ONE_ERASE
 	_LB.Gauss_rev_fin(_Answer);
 	for (int i = 1; i < _Answer.size(); i++)
 	{
-		//_Answer[i].set_LM();
-		//_Answer[i].set_LMdeg();
-		//_Answer[i] * _GFf._Inverse[_Answer[i]._LM];
 		_Answer[i]._Coeff.resize(_Variables + 1);
-		
+
 		writing_file << "[";
 		for (int j = 0; j < _Answer[i]._Coeff.size(); j++)
 		{
@@ -418,6 +435,20 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 		}
 		writing_file << "]" << endl;
 	}
+#endif // !ONE_ERASE
+
+#ifndef ONE_ERASE
+	for (int i = 0; i < _Equations.size(); i++)
+	{
+		writing_file << "[";
+		for (int j = 0; j < _Equations[i]._Coeff.size(); j++)
+		{
+			writing_file << (int)_Equations[i]._Coeff[j] << " ";
+		}
+		writing_file << "]" << endl;
+	}
+#endif // ONE_ERASE
+
 	writing_file.close();
 	writing_all.close();
 	gauss_file_time_.close();
@@ -479,8 +510,20 @@ inline vector<int> F4<GF, Deci, Spol, Red, LB>::seikika(vector<GF> &G)
 				if (G[j]._LMdeg_index == -1) continue;
 
 				G[j] * (_GFf._Inverse[G[j]._LM]);
+				if (G[j]._LMdeg_index <= _Variables)
+				{
+					if (G[_Spoly._Spolies[j]._LMdeg_index]._Coeff.size() == 0)
+					{
+						_Answer[G[j]._LMdeg_index] = G[j];
+						count++;
+					}
+					if (count == _Variables) break;
+				}
+				if (count == _Variables) break;
 			}
+			if (count == _Variables) break;
 		}
+		if (count == _Variables) break;
 	}
 	return result;
 }

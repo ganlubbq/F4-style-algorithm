@@ -121,14 +121,18 @@
     <ClCompile Include="Degree_table.cpp" />
     <ClCompile Include="GF31.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="memory.cpp" />
     <ClCompile Include="Poly.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Decision.h" />
+    <ClInclude Include="decision.h" />
     <ClInclude Include="Degree_table.h" />
     <ClInclude Include="F4.h" />
     <ClInclude Include="GF31.h" />
+    <ClInclude Include="SystemInfoInternalWindows.h" />
     <ClInclude Include="LB.h" />
+    <ClInclude Include="SystemInfoInternal.h" />
+    <ClInclude Include="memory.h" />
     <ClInclude Include="Poly.h" />
     <ClInclude Include="Red.h" />
     <ClInclude Include="Spoly.h" />
