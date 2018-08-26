@@ -190,8 +190,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 		
 		while (_Decision._D_sort[p].size() > 0)
 		{
-			//writing_file << _Decision._D_sort[p].size() << endl;
-			//cout << _Decision._D_sort[p].size() << endl;
 
 			cout << "p" << p << endl;
 			cout << "size" << _Decision._D_sort[p].size() << endl;
@@ -293,8 +291,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					if (flag)
 					{
 						_Equations.push_back(_Spoly._Spolies[i]);
-						//if (_Seiki == false)
-						//{
 #ifdef ONE_ERASE
 						if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
 						{
@@ -314,7 +310,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						{
 							de_i.push_back(_Equations.size() - 1);
 						}
-						//}
 					}
 				}
 				if (count == _Variables) break;
@@ -410,18 +405,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	LB_file_time_size_ << endl << endl;
 	red_file_time_size_ << endl << endl;
 
-	cout << "#" << endl;
-	for (int i = 1; i < _Answer.size(); i++)
-	{
-		_Answer[i]._Coeff.resize(_Variables + 1);
-
-		cout << "[";
-		for (int j = 0; j < _Answer[i]._Coeff.size(); j++)
-		{
-			cout << (int)_Answer[i]._Coeff[j] << " ";
-		}
-		cout << "]" << endl;
-	}
 #ifdef ONE_ERASE
 	_LB.Gauss_rev_fin(_Answer);
 	for (int i = 1; i < _Answer.size(); i++)
@@ -512,7 +495,7 @@ inline vector<int> F4<GF, Deci, Spol, Red, LB>::seikika(vector<GF> &G)
 				G[j] * (_GFf._Inverse[G[j]._LM]);
 				if (G[j]._LMdeg_index <= _Variables)
 				{
-					if (G[_Spoly._Spolies[j]._LMdeg_index]._Coeff.size() == 0)
+					if (_Answer[G[j]._LMdeg_index]._Coeff.size() == 0)
 					{
 						_Answer[G[j]._LMdeg_index] = G[j];
 						count++;
