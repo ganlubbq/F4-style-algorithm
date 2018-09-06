@@ -23,7 +23,7 @@ string GF31::_DX = "d";
 
 //Poly関連初期化
 #ifdef D1
-Degree_table d(11);
+Degree_table d(3);
 Degree_table Poly::_Degree = d;
 #endif //D1
 
@@ -57,10 +57,10 @@ int F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>>::_Parallel_div = 
 int main(int argc, char *argv[])
 {
 	//for (int i = 0; i < argc; i++) cout << argv[i] << endl;
-	system("pause");
+	//system("pause");
 	int variables = ctoi(argv);
 	string filename = argv[1];
-
+	//cout << filename << "###" <<endl;
 	string writing_file = argv[3];
 	string all_file = argv[5];
 	string gauss_file = argv[6];
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
 
 //くそ仕様注意　7~39以外バグる
 int ctoi(char *argv[]) {
-	//return 3;
+	return 3;
 	switch (argv[2][0]) {
 	case '1':
 		switch (argv[2][1])

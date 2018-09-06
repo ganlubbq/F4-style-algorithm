@@ -102,7 +102,7 @@ void F4<GF, Deci, Spol, Red, LB>::file_read()
 	int coeff_int;
 
 	//MQcharenngeå^ÇµÇ©ì«Ç›çûÇﬂÇ»Ç¢ïœçX
-	for (int i = 0; i < 2 * _Variables; i++)
+	for (int i = 0; i < /*2 * _Variables*/4; i++)
 	{
 		vector<unsigned char> temp;
 		for (int j = 0; j < var_deg_comb(_Variables, 2); j++) {
@@ -130,7 +130,7 @@ inline int F4<GF, Deci, Spol, Red, LB>::var_deg_comb(int n, int r) {//nïœêîréüëΩ
 template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
-//#define DEBUG
+#define DEBUG
 #define ONE_ERASE
 	std::ofstream writing_file;
 	writing_file.open(w_file_name, std::ios::out);
@@ -165,11 +165,27 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // DEBUG
 
 
-	if (_Seiki != 0) _LB.Gauss_rev(_Equations);
+	//if (_Seiki != 0) _LB.Gauss_rev(_Equations);
+
+	//_LB.Gauss_rev(_Equations);
+	//seikika(_Equations);
 
 	auto decision_start = clock();
 	//SpolyçiÇËçûÇ› init
 	_Decision.decision(_Equations);
+
+	vector<int> a = { 0,1 };
+	vector<int> b = { 0,2 };
+	vector<int> c = { 0,3 };
+	vector<int> d = { 1,2 };
+	vector<int> e = { 1,3 };
+	vector<int> f = { 2,3 };
+	_Decision._D_sort[3].push_back(a);
+	_Decision._D_sort[3].push_back(b);
+	_Decision._D_sort[3].push_back(c);
+	_Decision._D_sort[3].push_back(d);
+	_Decision._D_sort[3].push_back(e);
+	_Decision._D_sort[3].push_back(f);
 	auto decision_end =  clock();
 	decision_file_time_size_ << _Equations.size() << "\t" << decision_end - decision_start << endl;
 
@@ -245,6 +261,14 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			_Red.calc_red(_Spoly._Spolies, _Equations);
 			auto red_end = clock();
 			red_file_time_size_ << red_end - red_start << endl;
+#ifdef DEBUG
+			cout << "Red" << endl;
+			for (int x = 0; x < _Red._Reds.size(); x++)
+			{
+				printvec(_Red._Reds[x]._Coeff);
+			}
+			cout << endl;
+#endif // DEBUG
 
 			//Ç±Ç±SpolyÇ§Ç‹Ç≠égÇ¶ÇŒè¡ÇπÇÈ?
 			_Spoly._Spolies.insert(_Spoly._Spolies.end(), _Red._Reds.begin(), _Red._Reds.end()); // òAåã S = S or Red
