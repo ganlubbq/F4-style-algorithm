@@ -15,7 +15,8 @@ class F4
 public:
 	F4(string filename, int variables, string writing_file, int seiki, string all,string gauss,string LB_file,string red_file,string decision_file);
 
-	//variables
+	//file
+#pragma region
 	string file_name;
 	string w_file_name;
 	string all_file_name;
@@ -23,6 +24,8 @@ public:
 	string LB_file_time_size;
 	string red_file_time_size;
 	string decision_file_time_size;
+#pragma endregion
+	//variables
 	int _Variables;
 	static Deci _Decision;
 	static Spol _Spoly;
@@ -132,6 +135,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
 #define DEBUG
 #define ONE_ERASE
+	//writing file
+#pragma region
 	std::ofstream writing_file;
 	writing_file.open(w_file_name, std::ios::out);
 
@@ -146,6 +151,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 	ofstream decision_file_time_size_;
 	decision_file_time_size_.open(decision_file_time_size, ios::app);
+#pragma endregion
 
 	auto start = clock();
 	//all_time = 0;
@@ -164,28 +170,13 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	cout << endl;
 #endif // DEBUG
 
-
-	//if (_Seiki != 0) _LB.Gauss_rev(_Equations);
-
-	//_LB.Gauss_rev(_Equations);
-	//seikika(_Equations);
+	//old
+	if (_Seiki != 0) _LB.Gauss_rev(_Equations);
 
 	auto decision_start = clock();
-	//Spolyi‚èž‚Ý init
+	//Spolyi‚èž‚Ý init old
 	_Decision.decision(_Equations);
 
-	vector<int> a = { 0,1 };
-	vector<int> b = { 0,2 };
-	vector<int> c = { 0,3 };
-	vector<int> d = { 1,2 };
-	vector<int> e = { 1,3 };
-	vector<int> f = { 2,3 };
-	_Decision._D_sort[3].push_back(a);
-	_Decision._D_sort[3].push_back(b);
-	_Decision._D_sort[3].push_back(c);
-	_Decision._D_sort[3].push_back(d);
-	_Decision._D_sort[3].push_back(e);
-	_Decision._D_sort[3].push_back(f);
 	auto decision_end =  clock();
 	decision_file_time_size_ << _Equations.size() << "\t" << decision_end - decision_start << endl;
 
@@ -198,28 +189,24 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	cout << endl;
 #endif // DEBUG
 
-	
-
+	//ŽŸ”‚²‚Æ@p‚ªŽŸ”@2ŽŸ‚©‚ç
 	for (int p = 1; p < _Decision._D_sort.size(); p++)
 	{
 		reset = false;
 		
 		while (_Decision._D_sort[p].size() > 0)
 		{
-
 			cout << "p" << p << endl;
 			cout << "size" << _Decision._D_sort[p].size() << endl;
-
 			writing_file << "p" << p << endl;
 			writing_file << "size" << _Decision._D_sort[p].size() << endl;
-
 			LB_file_time_size_ << p << "\t" << _Decision._D_sort[p].size() << "\t";
 
 			_Spoly.spoly_erase();
-			/*vector<vector<int>> DD;
+			vector<vector<int>> DD;
 			if (_Decision._D_sort[p].size() > _Parallel_div)
 			{
-				//DD.resize(_Parallel_div);
+				DD.resize(_Parallel_div);
 				DD.insert(DD.end(), _Decision._D_sort[p].begin(), _Decision._D_sort[p].begin() + _Parallel_div);
 				_Decision._D_sort[p].erase(_Decision._D_sort[p].begin(), _Decision._D_sort[p].begin() + _Parallel_div);
 #ifdef DEBUG
@@ -231,7 +218,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				cout << endl;
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, DD);
-			}*/
+			}
 			/*else
 			{*/
 #ifdef DEBUG

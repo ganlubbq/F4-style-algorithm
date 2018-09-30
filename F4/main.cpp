@@ -59,17 +59,22 @@ int main(int argc, char *argv[])
 	//for (int i = 0; i < argc; i++) cout << argv[i] << endl;
 	//system("pause");
 	int variables = ctoi(argv);
+
+	//file
 	string filename = argv[1];
-	//cout << filename << "###" <<endl;
 	string writing_file = argv[3];
 	string all_file = argv[5];
 	string gauss_file = argv[6];
 	string LB_file = argv[7];
 	string red_file = argv[8];
 	string decision_file = argv[9];
+
 	int seiki;
+	//正規化なし
 	if (argv[4][0] == '0') seiki = 0;
+	//ガウス掃き出し
 	else if (argv[4][0] == '1') seiki = 1;
+	//正規化あり
 	else if (argv[4][0] == '2') seiki = 2;
 
 	cout << seiki << endl;
@@ -83,7 +88,7 @@ int main(int argc, char *argv[])
 
 //くそ仕様注意　7~39以外バグる
 int ctoi(char *argv[]) {
-	return 3;
+	//return 3;
 	switch (argv[2][0]) {
 	case '1':
 		switch (argv[2][1])
