@@ -17,6 +17,7 @@ public:
 	void calc_LB(vector<GF> &Sp_red);
 	void Gauss_rev(vector<GF> &Sp_red);
 	void Gauss_rev_fin(vector<GF> &Sp_red);
+	void Gauss_rev_only(vector<GF> &Sp_red);
 	vector<int> Gauss_rev_Eq(vector<GF> &Eq);
 };
 
@@ -109,6 +110,12 @@ void LB<GF>::Gauss_rev_fin(vector<GF> &Sp_red)
 			}
 		}
 	}
+}
+
+template <class GF>
+void LB<GF>::Gauss_rev_only(vector<GF> &Sp_red)
+{
+	
 }
 
 template <class GF>

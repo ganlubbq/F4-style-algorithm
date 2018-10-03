@@ -171,7 +171,10 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // DEBUG
 
 	//old
-	if (_Seiki != 0) _LB.Gauss_rev(_Equations);
+	 if(_Seiki != 0) _LB.Gauss_rev(_Equations);
+
+	//only
+	//_LB.Gauss_rev_only(_Equations);
 
 	auto decision_start = clock();
 	//SpolyçiÇËçûÇ› init old
@@ -219,8 +222,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, DD);
 			}
-			/*else
-			{*/
+			else
+			{
 #ifdef DEBUG
 				cout << "D" << endl;
 				for (int x = 0; x < _Decision._D_sort[p].size(); x++)
@@ -231,7 +234,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, _Decision._D_sort[p]);
 				_Decision.d_sort_erase(p);
-			//}
+			}
 
 			red_file_time_size_ << _Spoly._Spolies.size() << "\t" << _Equations.size() << "\t";
 			

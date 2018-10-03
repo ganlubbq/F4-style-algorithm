@@ -63,7 +63,7 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 			{
 				if (_GFr._Degree.reducible(G[j]._LMdeg, _GFr._Degree.index_to_degree(M_index[i])))
 				{
-					cout << M_index[i] << endl;
+					//cout << M_index[i] << endl;
 					flag = true;
 					vector<unsigned char> temp_deg = _GFr._Degree.vec_sub(_GFr._Degree.index_to_degree(M_index[i]), G[j]._LMdeg);
 					GF temp_g = G[j];

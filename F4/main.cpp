@@ -77,18 +77,18 @@ int main(int argc, char *argv[])
 	//正規化あり
 	else if (argv[4][0] == '2') seiki = 2;
 
-	cout << seiki << endl;
+	std::cout << seiki << endl;
 
 	F4<GF31, Decision<GF31>, Spoly<GF31>, Red<GF31>, LB<GF31>> f4(filename, variables, writing_file, seiki, all_file,gauss_file,LB_file,red_file,decision_file);
 
 	f4.F4_style();
-	system("pause");
+	//system("pause");
 	return 0;
 }
 
 //くそ仕様注意　7~39以外バグる
 int ctoi(char *argv[]) {
-	//return 3;
+	return 3;
 	switch (argv[2][0]) {
 	case '1':
 		switch (argv[2][1])
