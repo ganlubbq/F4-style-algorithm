@@ -23,7 +23,7 @@ inline void Spoly<GF>::calc_Spoly(vector<GF> &G, vector<vector<int>> &D)
 {
 	_Spolies.resize(D.size() * 2);
 
-#pragma omp parallel for
+//#pragma omp parallel for
 	for (int i = 0; i < D.size(); i++)
 	{
 		vector<unsigned char> lcm_deg = _GFs._Degree.LCM(G[D[i][0]]._LMdeg, G[D[i][1]]._LMdeg);

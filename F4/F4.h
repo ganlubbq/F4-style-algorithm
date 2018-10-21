@@ -4,6 +4,7 @@
 #include <string>
 #include<vector>
 #include<time.h>
+#include <algorithm>
 #include "memory.h"
 
 using namespace std;
@@ -37,6 +38,8 @@ public:
 	GF _GFf;
 	vector<GF> _Answer;
 	vector<GF> _Equations;
+	vector<int> _LMplace;
+	vector<int> _LMplace_new;
 	vector<int> de_i;//gauss掃き出しに必要なindex
 	//clock_t all_time;
 
@@ -47,6 +50,8 @@ public:
 	int var_deg_comb(int n, int r);
 	void F4_style();
 	vector<int> seikika(vector<GF> &G);
+	void Equation_reduction(GF &Spoly);
+	bool one_erace_check3();
 };
 
 template <class GF, class Deci, class Spol, class Red, class LB>
@@ -105,7 +110,7 @@ void F4<GF, Deci, Spol, Red, LB>::file_read()
 	int coeff_int;
 
 	//MQcharennge型しか読み込めない変更
-	for (int i = 0; i < /*2 * _Variables*/4; i++)
+	for (int i = 0; i < 2 * _Variables; i++)
 	{
 		vector<unsigned char> temp;
 		for (int j = 0; j < var_deg_comb(_Variables, 2); j++) {
@@ -133,8 +138,8 @@ inline int F4<GF, Deci, Spol, Red, LB>::var_deg_comb(int n, int r) {//n変数r次多
 template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
-#define DEBUG
-#define ONE_ERASE
+//#define DEBUG
+//#define ONE_ERASE
 	//writing file
 #pragma region
 	std::ofstream writing_file;
@@ -160,6 +165,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	count = 0;
 	int a_count = 0;
 	bool reset = false;
+	bool flag_3 = false;
+
 
 #ifdef DEBUG
 	cout << "init" << endl;
@@ -171,14 +178,20 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // DEBUG
 
 	//old
-	 if(_Seiki != 0) _LB.Gauss_rev(_Equations);
-
+	if(_Seiki != 3)_LB.Gauss_rev(_Equations);
 	//only
-	//_LB.Gauss_rev_only(_Equations);
+	else 
+	{
+	//Equations resize 4じ　あんど　gaussrev and lm配置
+		_LB.Gauss_rev_only_init(_Equations,_Variables,_LMplace);
+	}
 
 	auto decision_start = clock();
-	//Spoly絞り込み init old
-	_Decision.decision(_Equations);
+	if(_Seiki != 3) _Decision.decision(_Equations);
+	else
+	{
+		_Decision.decision_kai(_LMplace);
+	}
 
 	auto decision_end =  clock();
 	decision_file_time_size_ << _Equations.size() << "\t" << decision_end - decision_start << endl;
@@ -286,6 +299,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				printvec(_Spoly._Spolies[x]._Coeff);
 			}
 			cout << endl;
+
 #endif // DEBUG
 
 			for (int i = 0; i < _Spoly._Spolies.size(); i++)
@@ -294,6 +308,20 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				if (_Spoly._Spolies[i]._LMdeg_index != -1)
 				{
 					bool flag = true;
+#ifdef ONE_ERASE
+					if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
+					{
+						cout << "ONE_Erace" << endl;
+						if (_Answer[_Spoly._Spolies[i]._LMdeg_index]._Coeff.size() == 0)
+						{
+							_Answer[_Spoly._Spolies[i]._LMdeg_index] = _Spoly._Spolies[i];
+							count++;
+						}
+						if (count == _Variables) break;
+					}
+					if (count == _Variables) break;
+#endif //ONE_ERASE
+
 					for (int j = 0; j < _Red._Reds.size(); j++)
 					{
 						if (_Decision.veceq(_Spoly._Spolies[i]._LMdeg, _Red._Reds[j]._LMdeg))
@@ -304,32 +332,31 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					}
 					if (flag)
 					{
-						_Equations.push_back(_Spoly._Spolies[i]);
-#ifdef ONE_ERASE
-						if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
+						if(_Seiki != 3)_Equations.push_back(_Spoly._Spolies[i]);
+						else
 						{
-							if (_Answer[_Spoly._Spolies[i]._LMdeg_index]._Coeff.size() == 0)
-							{
-								_Answer[_Spoly._Spolies[i]._LMdeg_index] = _Spoly._Spolies[i];
-								count++;
-							}
-							if (count == _Variables) break;
+							//LMplace_newにindex追加まで _Spolie[i]は割られて変形されることあり
+							Equation_reduction(_Spoly._Spolies[i]);
+							flag_3 = one_erace_check3();
 						}
-#endif //ONE_ERASE
-						if (_Seiki == 0 )
+						//_Seiki == 3も大丈夫
+
+						if (_Seiki == 0)
 						{
 							_Decision.Gebauer_Moller_mono(_Equations);
 						}
-						else if (_Seiki != 0)
+						else if (_Seiki == 1 || _Seiki == 2)
 						{
 							de_i.push_back(_Equations.size() - 1);
 						}
 					}
 				}
 				if (count == _Variables) break;
+				if (flag_3) break;
 			}
 			if (count == _Variables) break;
-			if (_Seiki != 0)
+			if (flag_3) break;
+			if (_Seiki == 1 || _Seiki == 2)
 			{
 				if (_Seiki == 1)
 				{
@@ -365,6 +392,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 						{
 							if (_Answer[_Equations[n]._LMdeg_index]._Coeff.size() == 0)
 							{
+								cout << "ONE_ERACE" << endl;
 								_Answer[_Equations[n]._LMdeg_index] = _Equations[n];
 								count++;
 							}
@@ -379,16 +407,33 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif //ONE_ERASE
 				reset = true;
 			}
-			if (_Seiki != 0)
+
+			//////////////////////////Spoly関連ここまで/////////////////////////////////////////////////
+			if (_Seiki == 1 || _Seiki == 2)
 			{
 				for (auto itr = de_i.begin(); itr != de_i.end(); itr++)
 				{
+					cout << (*itr) << endl;
+					printvec(_Equations[*itr]._Coeff);
+					printvec(_Equations[0]._Coeff);
 					_Decision.Gebauer_Moller_num(_Equations, *itr);
 				}
 				
 				de_i.resize(0);
 			}
-			_Decision.Buchberger(_Equations);
+			//げばうわめらー & ぶっふばーがー
+			else if (_Seiki == 3)
+			{
+				std::sort(_LMplace_new.begin(), _LMplace_new.end());
+				//改良可能　newを分ければ　ブッフバーガーの判定削れる
+				_Decision.decision_kai_2(_LMplace_new,_LMplace);
+				//LMplace oldにnewをつけ加える
+				_LMplace.insert(_LMplace.end(), _LMplace_new.begin(), _LMplace_new.end());
+				_LMplace_new.resize(0);
+			}
+
+			if(_Seiki != 3)_Decision.Buchberger(_Equations);
+
 #ifdef DEBUG
 			cout << "init" << endl;
 			for (int x = 0; x < _Equations.size(); x++)
@@ -400,6 +445,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 		}
 		if (reset == true) p = 1;
 		if (count == _Variables) break;
+		if (flag_3) break;
 	}
 
 	auto end = clock();
@@ -435,14 +481,28 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // !ONE_ERASE
 
 #ifndef ONE_ERASE
-	for (int i = 0; i < _Equations.size(); i++)
-	{
-		writing_file << "[";
-		for (int j = 0; j < _Equations[i]._Coeff.size(); j++)
+	if (_Seiki != 3) {
+		for (int i = 0; i < _Equations.size(); i++)
 		{
-			writing_file << (int)_Equations[i]._Coeff[j] << " ";
+			writing_file << "[";
+			for (int j = 0; j < _Equations[i]._Coeff.size(); j++)
+			{
+				writing_file << (int)_Equations[i]._Coeff[j] << " ";
+			}
+			writing_file << "]" << endl;
 		}
-		writing_file << "]" << endl;
+	}
+	else {
+		for (int i = 1; i <= _Variables; i++)
+		{
+			writing_file << "[";
+			_Equations[i]._Coeff.resize(_Variables + 1);
+			for (int j = 0; j < _Equations[i]._Coeff.size(); j++)
+			{
+				writing_file << (int)_Equations[i]._Coeff[j] << " ";
+			}
+			writing_file << "]" << endl;
+		}
 	}
 #endif // ONE_ERASE
 
@@ -523,4 +583,38 @@ inline vector<int> F4<GF, Deci, Spol, Red, LB>::seikika(vector<GF> &G)
 		if (count == _Variables) break;
 	}
 	return result;
+}
+
+template <class GF, class Deci, class Spol, class Red, class LB>
+inline void F4<GF, Deci, Spol, Red, LB>::Equation_reduction(GF &Spoly)
+{
+	while (true)
+	{
+		if (Spoly._LMdeg_index == -1) break;
+		//該当箇所存在しない
+		else if (_Equations[Spoly._LMdeg_index]._LMdeg_index == -1)
+		{
+			_Equations[Spoly._LMdeg_index] = Spoly;
+			_LMplace_new.push_back(Spoly._LMdeg_index);
+			break;
+		}
+		//reduction
+		else
+		{
+			unsigned char inv = 30;
+			GF temp = _Equations[Spoly._LMdeg_index];
+			temp * inv;
+			Spoly + temp;
+		}
+	}
+}
+
+template <class GF, class Deci, class Spol, class Red, class LB>
+inline bool F4<GF, Deci, Spol, Red, LB>::one_erace_check3()
+{
+	for (int i = 1; i <= _Variables; i++)
+	{
+		if (_Equations[i]._LMdeg_index == -1) return false;
+	}
+	return true;
 }

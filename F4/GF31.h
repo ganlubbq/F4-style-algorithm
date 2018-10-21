@@ -712,6 +712,7 @@ inline void GF31::operator+(GF31 &poly)
 	/*_Coeff.resize(before);
 	poly._Coeff.resize(before);*/
 }
+
 //coeff”{
 inline void GF31::operator*(unsigned char &n)
 {

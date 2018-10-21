@@ -23,8 +23,9 @@ string GF31::_DX = "d";
 
 //Poly関連初期化
 #ifdef D1
-Degree_table d(3);
+Degree_table d(9);
 Degree_table Poly::_Degree = d;
+Degree_table Decision<GF31>::_Degree_deci = d;
 #endif //D1
 
 //Spoly include
@@ -76,6 +77,8 @@ int main(int argc, char *argv[])
 	else if (argv[4][0] == '1') seiki = 1;
 	//正規化あり
 	else if (argv[4][0] == '2') seiki = 2;
+	//メラー改良 正規化なし
+	else if (argv[4][0] == '3') seiki = 3;
 
 	std::cout << seiki << endl;
 
@@ -88,7 +91,6 @@ int main(int argc, char *argv[])
 
 //くそ仕様注意　7~39以外バグる
 int ctoi(char *argv[]) {
-	return 3;
 	switch (argv[2][0]) {
 	case '1':
 		switch (argv[2][1])

@@ -61,26 +61,29 @@ void Red<GF>::calc_red(vector<GF> &Spolies, vector<GF> &G)
 		{
 			for (int j = 0; j < G.size(); j++)
 			{
-				if (_GFr._Degree.reducible(G[j]._LMdeg, _GFr._Degree.index_to_degree(M_index[i])))
+				if (G[j]._LMdeg_index != -1)
 				{
-					//cout << M_index[i] << endl;
-					flag = true;
-					vector<unsigned char> temp_deg = _GFr._Degree.vec_sub(_GFr._Degree.index_to_degree(M_index[i]), G[j]._LMdeg);
-					GF temp_g = G[j];
-					temp_g * temp_deg;
-					_Reds.push_back(temp_g);
-					temp_g = G[j];
-					temp_g.LM_del();
-					temp_g * temp_deg;
-					//M‚É’Ç‰Á
-					for (int k = 0; k < temp_g._Coeff.size(); k++)
+					if (_GFr._Degree.reducible(G[j]._LMdeg, _GFr._Degree.index_to_degree(M_index[i])))
 					{
-						if (temp_g._Coeff[k] != 0)
+						//cout << M_index[i] << endl;
+						flag = true;
+						vector<unsigned char> temp_deg = _GFr._Degree.vec_sub(_GFr._Degree.index_to_degree(M_index[i]), G[j]._LMdeg);
+						GF temp_g = G[j];
+						temp_g * temp_deg;
+						_Reds.push_back(temp_g);
+						temp_g = G[j];
+						temp_g.LM_del();
+						temp_g * temp_deg;
+						//M‚É’Ç‰Á
+						for (int k = 0; k < temp_g._Coeff.size(); k++)
 						{
-							M_index.push_back(k);
+							if (temp_g._Coeff[k] != 0)
+							{
+								M_index.push_back(k);
+							}
 						}
+						break;
 					}
-					break;
 				}
 			}
 		}

@@ -7,8 +7,16 @@ Poly::Poly(vector<unsigned char> &coeff)
 	set_LMdeg();
 }
 
+//0多項式生成
 Poly::Poly()
-{}
+{
+	_LM = 0;
+	_LMdeg_index = -1;
+	_LMdeg.resize(0);
+	//1次元　やばいかも
+	vector<unsigned char> coeff = { 0 };
+	_Coeff = coeff;
+}
 
 //アライメント　simdに必要なほか高速化にも寄与
 void* Poly::operator new(size_t size) {
