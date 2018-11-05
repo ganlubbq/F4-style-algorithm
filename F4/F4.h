@@ -222,7 +222,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			vector<vector<int>> DD;
 			if (_Decision._D_sort[p].size() > _Parallel_div)
 			{
-				DD.resize(_Parallel_div);
+				//DD.resize(_Parallel_div);
 				DD.insert(DD.end(), _Decision._D_sort[p].begin(), _Decision._D_sort[p].begin() + _Parallel_div);
 				_Decision._D_sort[p].erase(_Decision._D_sort[p].begin(), _Decision._D_sort[p].begin() + _Parallel_div);
 #ifdef DEBUG
@@ -232,6 +232,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					printvec(DD[x]);
 				}
 				cout << endl;
+				system("pause");
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, DD);
 			}
@@ -429,6 +430,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				_Decision.decision_kai_2(_LMplace_new,_LMplace);
 				//LMplace old‚Énew‚ð‚Â‚¯‰Á‚¦‚é
 				_LMplace.insert(_LMplace.end(), _LMplace_new.begin(), _LMplace_new.end());
+				std::sort(_LMplace.begin(), _LMplace.end());
 				_LMplace_new.resize(0);
 			}
 
