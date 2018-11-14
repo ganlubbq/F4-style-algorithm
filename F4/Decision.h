@@ -51,7 +51,7 @@ inline void Decision<GF>::decision_0_kai(vector<int> &LMplace, vector<GF> &G)
 {
 	_D_sort.resize(_GFd._Max_degree + 1);
 	Gebauer_Moller_0_kai(LMplace,G);
-	Buchberger(G);
+	//Buchberger(G);
 }
 
 template <class GF>
@@ -170,6 +170,7 @@ inline void Decision<GF>::Gebauer_Moller_kai_2(vector<int> &LMplace, vector<int>
 		vector<unsigned char> i_deg = _Degree_deci.index_to_degree(LMplace[i]);
 		for (int j = 0; j < LMplace_old.size(); j++)
 		{
+			//これ逆もいるのでは？ー＞Spoly考えるといらん気もしてきた
 			if (LMplace[i] > LMplace_old[j]) break;
 			int temp_T_ij_deg = 0;
 			bool flag = false;
@@ -220,10 +221,10 @@ inline void Decision<GF>::Gebauer_Moller_0_kai(vector<int> &LMplace, vector<GF> 
 			//F
 			int flag = 0;
 			int k = 0;
-			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg);
-			while (k < i)
+			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[LMplace[i]]._LMdeg, G[LMplace[j]]._LMdeg);
+			while (LMplace[k] < LMplace[i])
 			{
-				if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 				{
 					flag++;
 					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
@@ -233,7 +234,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai(vector<int> &LMplace, vector<GF> 
 						_GFd._Degree.update_degree(temp_T_ij_deg);
 						_D_sort.resize(_GFd._Max_degree + 1);
 					}
-					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
 					break;
 				}
 				k++;
@@ -243,11 +244,11 @@ inline void Decision<GF>::Gebauer_Moller_0_kai(vector<int> &LMplace, vector<GF> 
 			if (flag == 0)
 			{
 				int k = 0;
-				while (k < j)
+				while (LMplace[k] < LMplace[j])
 				{
-					if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
 					{
-						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 						{
 							flag++;
 							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
@@ -257,7 +258,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai(vector<int> &LMplace, vector<GF> 
 								_GFd._Degree.update_degree(temp_T_ij_deg);
 								_D_sort.resize(_GFd._Max_degree + 1);
 							}
-							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
 							break;
 						}
 					}
@@ -268,14 +269,14 @@ inline void Decision<GF>::Gebauer_Moller_0_kai(vector<int> &LMplace, vector<GF> 
 			//B
 			if (flag == 0)
 			{
-				int k = G.size() - 1;
-				while (k > j)
+				int k = LMplace.size() - 1;
+				while (LMplace[k] > LMplace[j])
 				{
-					if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
 					{
-						if (!veceq(_GFd._Degree.LCM(G[i]._LMdeg, G[k]._LMdeg), T_ij))
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[i]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 						{
-							if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+							if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 							{
 								int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
 								if (_GFd._Max_degree < temp_T_ij_deg)
@@ -284,7 +285,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai(vector<int> &LMplace, vector<GF> 
 									_GFd._Degree.update_degree(temp_T_ij_deg);
 									_D_sort.resize(_GFd._Max_degree + 1);
 								}
-								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
 								break;
 							}
 						}
@@ -299,61 +300,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai(vector<int> &LMplace, vector<GF> 
 template<class GF>
 inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int> &LMplace_old ,vector<GF> &G)
 {
-	//判定されるやつnewの中の一人
-	for (int i = LMplace[0]; i < LMplace.size() - 1; i++)
-	{
-		//判定するやつold
-		for (int j = LMplace_old[0]; j < LMplace_old.size(); j++)
-		{
-			//F
-			int flag = 0;
-			int k = LMplace_old[0];
-			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[LMplace[i]]._LMdeg, G[LMplace_old[j]]._LMdeg);
-			while (LMplace_old[k] < LMplace[i])
-			{
-				if (veceq(_GFd._Degree.LCM(G[LMplace_old[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
-				{
-					flag++;
-					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
-					if (_GFd._Max_degree < temp_T_ij_deg)
-					{
-						_GFd._Max_degree = temp_T_ij_deg;
-						_GFd._Degree.update_degree(temp_T_ij_deg);
-						_D_sort.resize(_GFd._Max_degree + 1);
-					}
-					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace_old[j] });
-					break;
-				}
-				k++;
-			}
-
-			//M
-			if (flag == 0)
-			{
-				int k = LMplace_old[0];
-				while (LMplace_old[k] < LMplace[j])
-				{
-					if (_GFd._Degree.reducible(G[LMplace_old[k]]._LMdeg, T_ij))
-					{
-						if (!veceq(_GFd._Degree.LCM(G[LMplace_old[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
-						{
-							flag++;
-							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
-							if (_GFd._Max_degree < temp_T_ij_deg)
-							{
-								_GFd._Max_degree = temp_T_ij_deg;
-								_GFd._Degree.update_degree(temp_T_ij_deg);
-								_D_sort.resize(_GFd._Max_degree + 1);
-							}
-							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace_old[j] });
-							break;
-						}
-					}
-					k++;
-				}
-			}
-		}
-	}
+	//new同士のi,j newはsortずみ
 	for (int i = 0; i < LMplace.size(); i++)
 	{
 		for (int j = i + 1; j < LMplace.size(); j++)
@@ -361,10 +308,11 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 			//F
 			int flag = 0;
 			int k = 0;
-			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[i]._LMdeg, G[j]._LMdeg);
-			while (k < i)
+			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[LMplace[i]]._LMdeg, G[LMplace[j]]._LMdeg);
+			//new めらー
+			while (LMplace[k] < LMplace[i])
 			{
-				if (veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 				{
 					flag++;
 					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
@@ -374,7 +322,26 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 						_GFd._Degree.update_degree(temp_T_ij_deg);
 						_D_sort.resize(_GFd._Max_degree + 1);
 					}
-					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
+					break;
+				}
+				k++;
+			}
+			k = 0;
+			//old めらー
+			while (LMplace_old[k] < LMplace[i])
+			{
+				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+				{
+					flag++;
+					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+					if (_GFd._Max_degree < temp_T_ij_deg)
+					{
+						_GFd._Max_degree = temp_T_ij_deg;
+						_GFd._Degree.update_degree(temp_T_ij_deg);
+						_D_sort.resize(_GFd._Max_degree + 1);
+					}
+					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
 					break;
 				}
 				k++;
@@ -382,13 +349,14 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 
 			//M
 			if (flag == 0)
-			{
+			{	
 				int k = 0;
-				while (k < j)
+				//new
+				while (LMplace[k] < LMplace[j])
 				{
-					if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
 					{
-						if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 						{
 							flag++;
 							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
@@ -398,7 +366,182 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 								_GFd._Degree.update_degree(temp_T_ij_deg);
 								_D_sort.resize(_GFd._Max_degree + 1);
 							}
-							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
+							break;
+						}
+					}
+					k++;
+				}
+				k = 0;
+				//old
+				while (LMplace_old[k] < LMplace[j])
+				{
+					if (_GFd._Degree.reducible(G[LMplace_old[k]]._LMdeg, T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+						{
+							flag++;
+							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+							if (_GFd._Max_degree < temp_T_ij_deg)
+							{
+								_GFd._Max_degree = temp_T_ij_deg;
+								_GFd._Degree.update_degree(temp_T_ij_deg);
+								_D_sort.resize(_GFd._Max_degree + 1);
+							}
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
+							break;
+						}
+					}
+					k++;
+				}
+			}
+			//B
+			if (flag == 0)
+			{
+				int k = LMplace.size() - 1;
+				//new
+				while (k >= 0 && LMplace[k] > LMplace[j])
+				{
+					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[i]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
+						{
+							if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
+							{
+								int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+								if (_GFd._Max_degree < temp_T_ij_deg)
+								{
+									_GFd._Max_degree = temp_T_ij_deg;
+									_GFd._Degree.update_degree(temp_T_ij_deg);
+									_D_sort.resize(_GFd._Max_degree + 1);
+								}
+								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
+								break;
+							}
+						}
+					}
+					k--;
+				}
+				k = LMplace_old.size() - 1;
+				//old
+				while (k >= 0 && LMplace_old[k] > LMplace[j])
+				{
+					if (_GFd._Degree.reducible(G[LMplace_old[k]]._LMdeg, T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[i]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+						{
+							if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+							{
+								int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+								if (_GFd._Max_degree < temp_T_ij_deg)
+								{
+									_GFd._Max_degree = temp_T_ij_deg;
+									_GFd._Degree.update_degree(temp_T_ij_deg);
+									_D_sort.resize(_GFd._Max_degree + 1);
+								}
+								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace[i],LMplace[j] });
+								break;
+							}
+						}
+					}
+					k--;
+				}
+			}
+		}
+	}
+
+	//newとold
+	for (int i = 0; i < LMplace_old.size(); i++)
+	{
+		for (int j = 0; j < LMplace.size(); j++)
+		{
+			//これ逆もいると思われ　ー＞イラン気もしてきた 基本oldのが小さいことが多そう
+			if (LMplace[j] <= LMplace_old[i]) continue;
+			//F
+			int flag = 0;
+			int k = 0;
+			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[LMplace_old[i]]._LMdeg, G[LMplace[j]]._LMdeg);
+			//new めらー
+			while (LMplace[k] < LMplace_old[i])
+			{
+				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
+				{
+					flag++;
+					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+					if (_GFd._Max_degree < temp_T_ij_deg)
+					{
+						_GFd._Max_degree = temp_T_ij_deg;
+						_GFd._Degree.update_degree(temp_T_ij_deg);
+						_D_sort.resize(_GFd._Max_degree + 1);
+					}
+					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace_old[i],LMplace[j] });
+					break;
+				}
+				k++;
+			}
+			k = 0;
+			//old めらー
+			while (LMplace_old[k] < LMplace_old[i])
+			{
+				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+				{
+					flag++;
+					int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+					if (_GFd._Max_degree < temp_T_ij_deg)
+					{
+						_GFd._Max_degree = temp_T_ij_deg;
+						_GFd._Degree.update_degree(temp_T_ij_deg);
+						_D_sort.resize(_GFd._Max_degree + 1);
+					}
+					_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace_old[i],LMplace[j] });
+					break;
+				}
+				k++;
+			}
+
+
+			//M
+			if (flag == 0)
+			{
+				int k = 0;
+				//new
+				while (LMplace[k] < LMplace[j])
+				{
+					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
+						{
+							flag++;
+							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+							if (_GFd._Max_degree < temp_T_ij_deg)
+							{
+								_GFd._Max_degree = temp_T_ij_deg;
+								_GFd._Degree.update_degree(temp_T_ij_deg);
+								_D_sort.resize(_GFd._Max_degree + 1);
+							}
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace_old[i],LMplace[j] });
+							break;
+						}
+					}
+					k++;
+				}
+				k = 0;
+				//old
+				while (LMplace_old[k] < LMplace[j])
+				{
+					if (_GFd._Degree.reducible(G[LMplace_old[k]]._LMdeg, T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+						{
+							flag++;
+							int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+							if (_GFd._Max_degree < temp_T_ij_deg)
+							{
+								_GFd._Max_degree = temp_T_ij_deg;
+								_GFd._Degree.update_degree(temp_T_ij_deg);
+								_D_sort.resize(_GFd._Max_degree + 1);
+							}
+							_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace_old[i],LMplace[j] });
 							break;
 						}
 					}
@@ -409,14 +552,15 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 			//B
 			if (flag == 0)
 			{
-				int k = G.size() - 1;
-				while (k > j)
+				int k = LMplace.size() - 1;
+				//new
+				while (k >= 0 && LMplace[k] > LMplace[j])
 				{
-					if (_GFd._Degree.reducible(G[k]._LMdeg, T_ij))
+					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
 					{
-						if (!veceq(_GFd._Degree.LCM(G[i]._LMdeg, G[k]._LMdeg), T_ij))
+						if (!veceq(_GFd._Degree.LCM(G[LMplace_old[i]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 						{
-							if (!veceq(_GFd._Degree.LCM(G[j]._LMdeg, G[k]._LMdeg), T_ij))
+							if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 							{
 								int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
 								if (_GFd._Max_degree < temp_T_ij_deg)
@@ -425,7 +569,31 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 									_GFd._Degree.update_degree(temp_T_ij_deg);
 									_D_sort.resize(_GFd._Max_degree + 1);
 								}
-								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ i,j });
+								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace_old[i],LMplace[j] });
+								break;
+							}
+						}
+					}
+					k--;
+				}
+				k = LMplace_old.size() - 1;
+				//old
+				while (k >= 0 && LMplace_old[k] > LMplace[j])
+				{
+					if (_GFd._Degree.reducible(G[LMplace_old[k]]._LMdeg, T_ij))
+					{
+						if (!veceq(_GFd._Degree.LCM(G[LMplace_old[i]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+						{
+							if (!veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
+							{
+								int temp_T_ij_deg = _GFd._Degree.calc_total_deg(T_ij);
+								if (_GFd._Max_degree < temp_T_ij_deg)
+								{
+									_GFd._Max_degree = temp_T_ij_deg;
+									_GFd._Degree.update_degree(temp_T_ij_deg);
+									_D_sort.resize(_GFd._Max_degree + 1);
+								}
+								_D_sort[_GFd._Degree.calc_total_deg(T_ij)].push_back({ LMplace_old[i],LMplace[j] });
 								break;
 							}
 						}

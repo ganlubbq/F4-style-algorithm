@@ -197,7 +197,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 		_Decision.decision_0_kai(_LMplace,_Equations);
 	}
 
-
 	auto decision_end =  clock();
 	decision_file_time_size_ << _Equations.size() << "\t" << decision_end - decision_start << endl;
 
@@ -327,7 +326,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					}
 					if (count == _Variables) break;
 #endif //ONE_ERASE
-
 					for (int j = 0; j < _Red._Reds.size(); j++)
 					{
 						if (_Decision.veceq(_Spoly._Spolies[i]._LMdeg, _Red._Reds[j]._LMdeg))
@@ -442,7 +440,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			{
 				std::sort(_LMplace_new.begin(), _LMplace_new.end());
 				//改良可能　newを分ければ　ブッフバーガーの判定削れる
-				_Decision.decision_kai_2(_LMplace_new, _LMplace);
+				_Decision.decision_0_kai_2(_LMplace_new, _LMplace,_Equations);
 				//LMplace oldにnewをつけ加える
 				_LMplace.insert(_LMplace.end(), _LMplace_new.begin(), _LMplace_new.end());
 				std::sort(_LMplace.begin(), _LMplace.end());
@@ -498,7 +496,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // !ONE_ERASE
 
 #ifndef ONE_ERASE
-	if (_Seiki != 3) {
+	if (_Seiki != 3 && _Seiki != 4) {
 		for (int i = 0; i < _Equations.size(); i++)
 		{
 			writing_file << "[";
@@ -509,7 +507,49 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			writing_file << "]" << endl;
 		}
 	}
-	else {
+	else if(_Seiki == 3){
+		for (int i = 1; i <= _Variables; i++)
+		{
+			writing_file << "[";
+			_Equations[i]._Coeff.resize(_Variables + 1);
+			for (int j = 0; j < _Equations[i]._Coeff.size(); j++)
+			{
+				writing_file << (int)_Equations[i]._Coeff[j] << " ";
+			}
+			writing_file << "]" << endl;
+		}
+	}
+	else if (_Seiki == 4)
+	{
+		//vector size調整
+		int max_length = 0;
+		for (int i = 1; i <= _Variables; i++)
+		{
+			if (max_length < _Equations[i]._LMdeg_index + 1) max_length = _Equations[i]._LMdeg_index + 1;
+		}
+		for (int i = 1; i <= _Variables; i++)
+		{
+			_Equations[i]._Coeff.resize(max_length);
+			_Equations[i]._Coeff_size = max_length;
+			_Equations[i]._Div_single_size = _Equations[i]._Coeff_size / single_size;
+		}
+
+		//gauss
+		for (int i = 1; i <= _Variables; i++)
+		{
+			int index = _Equations[i]._LMdeg_index;
+			for (int j = 1; j <= _Variables; j++)
+			{
+				if (i == j) continue;
+				if (_Equations[j]._Coeff[index] != 0)
+				{
+					GF temp = _Equations[i];
+					temp * (_GFf._Add_inverse[_Equations[j]._Coeff[index]]);
+					_Equations[j] + temp;
+				}
+			}
+		}
+
 		for (int i = 1; i <= _Variables; i++)
 		{
 			writing_file << "[";
@@ -607,6 +647,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::Equation_reduction(GF &Spoly)
 {
 	while (true)
 	{
+		cout << Spoly._LMdeg_index << endl;
 		if (Spoly._LMdeg_index == -1) break;
 		//該当箇所存在しない
 		else if (_Equations[Spoly._LMdeg_index]._LMdeg_index == -1)
