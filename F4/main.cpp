@@ -23,7 +23,7 @@ string GF31::_DX = "d";
 
 //PolyŠÖ˜A‰Šú‰»
 #ifdef D1
-Degree_table d(7);
+Degree_table d(12);
 Degree_table Poly::_Degree = d;
 Degree_table Decision<GF31>::_Degree_deci = d;
 #endif //D1
@@ -79,6 +79,8 @@ int main(int argc, char *argv[])
 	else if (argv[4][0] == '2') seiki = 2;
 	//ƒƒ‰[‰ü—Ç ³‹K‰»‚È‚µ
 	else if (argv[4][0] == '3') seiki = 3;
+	//normal‰ü—Ç ‘½€®‡˜®—
+	else if (argv[4][0] == '4') seiki = 4;
 
 	std::cout << seiki << endl;
 

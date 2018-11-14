@@ -178,7 +178,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif // DEBUG
 
 	//old
-	if(_Seiki != 3)_LB.Gauss_rev(_Equations);
+	if(_Seiki != 3 && _Seiki != 4) _LB.Gauss_rev(_Equations);
 	//only
 	else 
 	{
@@ -187,11 +187,16 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	}
 
 	auto decision_start = clock();
-	if(_Seiki != 3) _Decision.decision(_Equations);
-	else
+	if(_Seiki != 3 && _Seiki != 4) _Decision.decision(_Equations);
+	else if(_Seiki == 3)
 	{
 		_Decision.decision_kai(_LMplace);
 	}
+	else
+	{
+		_Decision.decision_0_kai(_LMplace,_Equations);
+	}
+
 
 	auto decision_end =  clock();
 	decision_file_time_size_ << _Equations.size() << "\t" << decision_end - decision_start << endl;
@@ -333,7 +338,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					}
 					if (flag)
 					{
-						if(_Seiki != 3)_Equations.push_back(_Spoly._Spolies[i]);
+						if(_Seiki != 3 && _Seiki != 4)_Equations.push_back(_Spoly._Spolies[i]);
 						else
 						{
 							//LMplace_newにindex追加まで _Spolie[i]は割られて変形されることあり
@@ -433,8 +438,18 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				std::sort(_LMplace.begin(), _LMplace.end());
 				_LMplace_new.resize(0);
 			}
+			else if (_Seiki == 4)
+			{
+				std::sort(_LMplace_new.begin(), _LMplace_new.end());
+				//改良可能　newを分ければ　ブッフバーガーの判定削れる
+				_Decision.decision_kai_2(_LMplace_new, _LMplace);
+				//LMplace oldにnewをつけ加える
+				_LMplace.insert(_LMplace.end(), _LMplace_new.begin(), _LMplace_new.end());
+				std::sort(_LMplace.begin(), _LMplace.end());
+				_LMplace_new.resize(0);
+			}
 
-			if(_Seiki != 3)_Decision.Buchberger(_Equations);
+			if(_Seiki != 3 && _Seiki != 4)_Decision.Buchberger(_Equations);
 
 #ifdef DEBUG
 			cout << "init" << endl;
