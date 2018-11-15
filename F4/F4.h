@@ -138,7 +138,7 @@ inline int F4<GF, Deci, Spol, Red, LB>::var_deg_comb(int n, int r) {//nïœêîréüëΩ
 template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
-//#define DEBUG
+#define DEBUG
 //#define ONE_ERASE
 	//writing file
 #pragma region
@@ -170,11 +170,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 #ifdef DEBUG
 	cout << "init" << endl;
-	for (int x = 0; x < _Equations.size(); x++)
+	/*for (int x = 0; x < _Equations.size(); x++)
 	{
 		printvec(_Equations[x]._Coeff);
 	}
-	cout << endl;
+	cout << endl;*/
 #endif // DEBUG
 
 	//old
@@ -201,12 +201,12 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	decision_file_time_size_ << _Equations.size() << "\t" << decision_end - decision_start << endl;
 
 #ifdef DEBUG
-	cout << "init" << endl;
-	for (int x = 0; x < _Equations.size(); x++)
+	cout << "init2" << endl;
+/*	for (int x = 0; x < _Equations.size(); x++)
 	{
 		printvec(_Equations[x]._Coeff);
 	}
-	cout << endl;
+	cout << endl;*/
 #endif // DEBUG
 
 	//éüêîÇ≤Ç∆Å@pÇ™éüêîÅ@2éüÇ©ÇÁ
@@ -231,12 +231,12 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 				_Decision._D_sort[p].erase(_Decision._D_sort[p].begin(), _Decision._D_sort[p].begin() + _Parallel_div);
 #ifdef DEBUG
 				cout << "DD" << endl;
-				for (int x = 0; x < DD.size(); x++)
+			/*	for (int x = 0; x < DD.size(); x++)
 				{
 					printvec(DD[x]);
 				}
 				cout << endl;
-				system("pause");
+				system("pause");*/
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, DD);
 			}
@@ -244,11 +244,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			{
 #ifdef DEBUG
 				cout << "D" << endl;
-				for (int x = 0; x < _Decision._D_sort[p].size(); x++)
+				/*for (int x = 0; x < _Decision._D_sort[p].size(); x++)
 				{
 					printvec(_Decision._D_sort[p][x]);
 				}
-				cout << endl;
+				cout << endl;*/
 #endif // DEBUG
 				_Spoly.calc_Spoly(_Equations, _Decision._D_sort[p]);
 				_Decision.d_sort_erase(p);
@@ -258,11 +258,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			
 #ifdef DEBUG
 			cout << "Sp" << endl;
-			for (int x = 0; x < _Spoly._Spolies.size(); x++)
+		/*	for (int x = 0; x < _Spoly._Spolies.size(); x++)
 			{
 				printvec(_Spoly._Spolies[x]._Coeff);
 			}
-			cout << endl;
+			cout << endl;*/
 #endif // DEBUG
 
 			auto red_start = clock();
@@ -271,11 +271,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			red_file_time_size_ << red_end - red_start << endl;
 #ifdef DEBUG
 			cout << "Red" << endl;
-			for (int x = 0; x < _Red._Reds.size(); x++)
+			/*for (int x = 0; x < _Red._Reds.size(); x++)
 			{
 				printvec(_Red._Reds[x]._Coeff);
 			}
-			cout << endl;
+			cout << endl;*/
 #endif // DEBUG
 
 			//Ç±Ç±SpolyÇ§Ç‹Ç≠égÇ¶ÇŒè¡ÇπÇÈ?
@@ -283,11 +283,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 #ifdef DEBUG
 			cout << "Sp or Red" << endl;
-			for (int x = 0; x < _Spoly._Spolies.size(); x++)
+			/*for (int x = 0; x < _Spoly._Spolies.size(); x++)
 			{
 				printvec(_Spoly._Spolies[x]._Coeff);
 			}
-			cout << endl;
+			cout << endl;*/
 #endif // DEBUG
 
 			a_count += 1;
@@ -299,11 +299,11 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 #ifdef DEBUG
 			cout << "LB" << endl;
-			for (int x = 0; x < _Spoly._Spolies.size(); x++)
+			/*for (int x = 0; x < _Spoly._Spolies.size(); x++)
 			{
 				printvec(_Spoly._Spolies[x]._Coeff);
 			}
-			cout << endl;
+			cout << endl;*/
 
 #endif // DEBUG
 
@@ -450,7 +450,7 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 			if(_Seiki != 3 && _Seiki != 4)_Decision.Buchberger(_Equations);
 
 #ifdef DEBUG
-			cout << "init" << endl;
+			cout << "init3" << endl;
 			for (int x = 0; x < _Equations.size(); x++)
 			{
 				printvec(_Equations[x]._Coeff);
@@ -647,7 +647,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::Equation_reduction(GF &Spoly)
 {
 	while (true)
 	{
-		cout << Spoly._LMdeg_index << endl;
 		if (Spoly._LMdeg_index == -1) break;
 		//äYìñâ”èäë∂ç›ÇµÇ»Ç¢
 		else if (_Equations[Spoly._LMdeg_index]._LMdeg_index == -1)

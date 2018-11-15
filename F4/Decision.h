@@ -310,7 +310,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 			int k = 0;
 			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[LMplace[i]]._LMdeg, G[LMplace[j]]._LMdeg);
 			//new めらー
-			while (LMplace[k] < LMplace[i])
+			while (k < LMplace.size() && LMplace[k] < LMplace[i])
 			{
 				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 				{
@@ -329,7 +329,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 			}
 			k = 0;
 			//old めらー
-			while (LMplace_old[k] < LMplace[i])
+			while (k < LMplace_old.size() && LMplace_old[k] < LMplace[i])
 			{
 				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
 				{
@@ -346,13 +346,12 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 				}
 				k++;
 			}
-
 			//M
 			if (flag == 0)
 			{	
 				int k = 0;
 				//new
-				while (LMplace[k] < LMplace[j])
+				while (k < LMplace.size() && LMplace[k] < LMplace[j])
 				{
 					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
 					{
@@ -374,7 +373,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 				}
 				k = 0;
 				//old
-				while (LMplace_old[k] < LMplace[j])
+				while (k < LMplace_old.size() && LMplace_old[k] < LMplace[j])
 				{
 					if (_GFd._Degree.reducible(G[LMplace_old[k]]._LMdeg, T_ij))
 					{
@@ -462,7 +461,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 			int k = 0;
 			vector<unsigned char> T_ij = _GFd._Degree.LCM(G[LMplace_old[i]]._LMdeg, G[LMplace[j]]._LMdeg);
 			//new めらー
-			while (LMplace[k] < LMplace_old[i])
+			while (k < LMplace.size() && LMplace[k] < LMplace_old[i])
 			{
 				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace[k]]._LMdeg), T_ij))
 				{
@@ -481,7 +480,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 			}
 			k = 0;
 			//old めらー
-			while (LMplace_old[k] < LMplace_old[i])
+			while (k < LMplace_old.size() && LMplace_old[k] < LMplace_old[i])
 			{
 				if (veceq(_GFd._Degree.LCM(G[LMplace[j]]._LMdeg, G[LMplace_old[k]]._LMdeg), T_ij))
 				{
@@ -505,7 +504,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 			{
 				int k = 0;
 				//new
-				while (LMplace[k] < LMplace[j])
+				while (k < LMplace.size() && LMplace[k] < LMplace[j])
 				{
 					if (_GFd._Degree.reducible(G[LMplace[k]]._LMdeg, T_ij))
 					{
@@ -527,7 +526,7 @@ inline void Decision<GF>::Gebauer_Moller_0_kai_2(vector<int> &LMplace,vector<int
 				}
 				k = 0;
 				//old
-				while (LMplace_old[k] < LMplace[j])
+				while (k < LMplace_old.size() && LMplace_old[k] < LMplace[j])
 				{
 					if (_GFd._Degree.reducible(G[LMplace_old[k]]._LMdeg, T_ij))
 					{
