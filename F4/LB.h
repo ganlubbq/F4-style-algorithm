@@ -18,6 +18,7 @@ public:
 	void Gauss_rev(vector<GF> &Sp_red);
 	void Gauss_rev_fin(vector<GF> &Sp_red);
 	void Gauss_rev_only_init(vector<GF> &Sp_red,int val,vector<int> &LMplace);
+	void Gauss_rev_only_init_4(vector<GF> &Sp_red,int val,vector<int> &LMplace);
 	vector<int> Gauss_rev_Eq(vector<GF> &Eq);
 };
 
@@ -153,6 +154,58 @@ void LB<GF>::Gauss_rev_only_init(vector<GF> &Sp_red, int val, vector<int>& LMpla
 	sort(LMplace.begin(), LMplace.end());
 	//cout << endl;
 	Sp_red.resize(temp_4);
+	Sp_red = temp;
+}
+
+
+template <class GF>
+void LB<GF>::Gauss_rev_only_init_4(vector<GF> &Sp_red, int val, vector<int>& LMplace)
+{
+	//gauss rev
+	for (int i = 0; i < Sp_red.size(); i++)
+	{
+		//LC = 1‚É
+		if (Sp_red[i]._LM != 1)
+		{
+			Sp_red[i] * _GFl._Inverse[Sp_red[i]._LM];
+		}
+		int index = Sp_red[i]._LMdeg_index;
+		//#pragma omp parallel for
+		for (int j = 0; j < Sp_red.size(); j++)
+		{
+			if (i == j) continue;
+			if (Sp_red[j]._Coeff[index] != 0)
+			{
+				GF temp = Sp_red[i];
+				temp * (_GFl._Add_inverse[Sp_red[j]._Coeff[index]]);
+				Sp_red[j] + temp;
+			}
+		}
+	}
+
+	int tot = 1;
+	int temp_6 = 1;
+	//6ŽŸ‚Ü‚Å‚Æ‚è‚ ‚¦‚¸
+	for (int i = 1; i <= 6; i++)
+	{
+		temp_6 = (temp_6 * (val + i - 1)) / i;
+		tot += temp_6;
+	}
+
+	vector<GF> temp;
+	temp.resize(tot);
+
+	//•À‚Ñ‘Ö‚¦
+	for (int i = 0; i < val * 2; i++)
+	{
+		temp[Sp_red[i]._LMdeg_index] = Sp_red[i];
+		LMplace.push_back(Sp_red[i]._LMdeg_index);
+		//cout << i << "!";
+	}
+
+	sort(LMplace.begin(), LMplace.end());
+	//cout << endl;
+	Sp_red.resize(tot);
 	Sp_red = temp;
 }
 

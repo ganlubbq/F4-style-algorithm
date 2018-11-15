@@ -138,7 +138,7 @@ inline int F4<GF, Deci, Spol, Red, LB>::var_deg_comb(int n, int r) {//n変数r次多
 template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
-#define DEBUG
+//#define DEBUG
 //#define ONE_ERASE
 	//writing file
 #pragma region
@@ -180,10 +180,15 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	//old
 	if(_Seiki != 3 && _Seiki != 4) _LB.Gauss_rev(_Equations);
 	//only
-	else 
+	else  if(_Seiki == 3)
 	{
 	//Equations resize 4じ　あんど　gaussrev and lm配置
 		_LB.Gauss_rev_only_init(_Equations,_Variables,_LMplace);
+	}
+	else  if (_Seiki == 4)
+	{
+		//Equations resize 5じ　あんど　gaussrev and lm配置
+		_LB.Gauss_rev_only_init_4(_Equations, _Variables, _LMplace);
 	}
 
 	auto decision_start = clock();
@@ -411,7 +416,6 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 #endif //ONE_ERASE
 				reset = true;
 			}
-
 			//////////////////////////Spoly関連ここまで/////////////////////////////////////////////////
 			if (_Seiki == 1 || _Seiki == 2)
 			{
