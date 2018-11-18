@@ -139,7 +139,7 @@ template <class GF, class Deci, class Spol, class Red, class LB>
 inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 {
 //#define DEBUG
-//#define ONE_ERASE
+#define ONE_ERASE
 	//writing file
 #pragma region
 	std::ofstream writing_file;
@@ -312,8 +312,10 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 
 #endif // DEBUG
 
+			cout << "tatakaida" << endl;
 			for (int i = 0; i < _Spoly._Spolies.size(); i++)
 			{
+				cout << "loopda" << endl;
 				//0多項式判定
 				if (_Spoly._Spolies[i]._LMdeg_index != -1)
 				{
@@ -322,8 +324,14 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					if (_Spoly._Spolies[i]._LMdeg_index <= _Variables)
 					{
 						cout << "ONE_Erace" << endl;
-						if (_Answer[_Spoly._Spolies[i]._LMdeg_index]._Coeff.size() == 0)
+						printvec(_Spoly._Spolies[i]._Coeff);
+						cout << _Spoly._Spolies[i]._LMdeg_index << endl;
+						cout << _Answer[_Spoly._Spolies[i]._LMdeg_index]._Coeff.size() << endl;
+						//_coeff.size() == 1に変更した　もともと０だったが　GFのコンストラクタいじった（っけ？）から1にしないとってこと？
+						if (_Answer[_Spoly._Spolies[i]._LMdeg_index]._Coeff.size() == 1)
 						{
+							cout << "nani??" << endl;
+							printvec(_Spoly._Spolies[i]._Coeff);
 							_Answer[_Spoly._Spolies[i]._LMdeg_index] = _Spoly._Spolies[i];
 							count++;
 						}
@@ -399,7 +407,8 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 					{
 						if (_Equations[n]._LMdeg_index <= _Variables)
 						{
-							if (_Answer[_Equations[n]._LMdeg_index]._Coeff.size() == 0)
+							//上と同じ変更
+							if (_Answer[_Equations[n]._LMdeg_index]._Coeff.size() == 1)
 							{
 								cout << "ONE_ERACE" << endl;
 								_Answer[_Equations[n]._LMdeg_index] = _Equations[n];
@@ -485,6 +494,17 @@ inline void F4<GF, Deci, Spol, Red, LB>::F4_style()
 	red_file_time_size_ << endl << endl;
 
 #ifdef ONE_ERASE
+	for (int i = 1; i < _Answer.size(); i++)
+	{
+		_Answer[i]._Coeff.resize(_Variables + 1);
+		cout << "HAZIMERUZO" << endl;
+		cout << "[";
+		for (int j = 0; j < _Answer[i]._Coeff.size(); j++)
+		{
+			cout << (int)_Answer[i]._Coeff[j] << " ";
+		}
+		cout << "]" << endl;
+	}
 	_LB.Gauss_rev_fin(_Answer);
 	for (int i = 1; i < _Answer.size(); i++)
 	{
